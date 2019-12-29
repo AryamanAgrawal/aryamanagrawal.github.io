@@ -34974,7 +34974,7 @@ A.tN.prototype={
 $0:function(){C.T.hA(window,"https://github.com/AryamanAgrawal/aryamanagrawal.github.io/blob/master/assets/assets/AryamanAgrawalResume.pdf","AryamanAgrawal")},
 $S:0}
 A.tO.prototype={
-$0:function(){C.T.hA(window,"https://aryaman.agrawal21@gmail.com","AryamanAgrawal")},
+$0:function(){C.T.hA(window,"https://mail.google.com/mail/u/0/?view=cm&fs=1&to=aryaman.agrawal21@gmail.com","AryamanAgrawal")},
 $S:0}
 F.Ao.prototype={
 P:function(a){return new S.nG(new F.nT(null),"Aryaman Agrawal",X.Pn(C.J).Gl(C.i),null)}}
