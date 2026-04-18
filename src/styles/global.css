@@ -201,6 +201,34 @@ html, body, a, .item-row, .item-title, .item-summary,
 .prose hr { border: none; border-top: 1px solid var(--c-line); margin: var(--s-12) 0; }
 .prose img, .prose svg { max-width: 100%; height: auto; }
 
+/* Citations — rehype-citation emits <span class="citation"> around inline cites
+   and appends a <div id="refs" class="references csl-bib-body"> block at the end. */
+.prose .citation a {
+  color: var(--c-accent);
+  border-bottom: 1px dotted currentColor;
+  padding-bottom: 0;
+}
+.prose .citation a:hover { border-bottom-style: solid; }
+
+.prose #refs {
+  margin-top: var(--s-6);
+  font-size: var(--t-14);
+  line-height: 1.55;
+  color: var(--c-text);
+  counter-reset: ref;
+}
+.prose #refs .csl-entry {
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--c-line);
+  text-indent: -1.5em;
+  padding-left: 1.5em;
+}
+.prose #refs .csl-entry:last-child { border-bottom: none; }
+.prose #refs .csl-entry a {
+  color: var(--c-accent);
+  border-bottom: none;
+}
+
 /* Tables */
 .prose table {
   font-family: var(--font-ui);
