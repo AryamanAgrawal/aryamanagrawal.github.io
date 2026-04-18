@@ -3,7 +3,7 @@ import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
   const site = context.site!.toString().replace(/\/$/, '');
-  const essays = (await getCollection('essays', ({ data }) => !data.draft))
+  const writings = (await getCollection('writings', ({ data }) => !data.draft))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   const poems = (await getCollection('poems', ({ data }) => !data.draft))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -13,9 +13,9 @@ export async function GET(context: APIContext) {
     '',
     '> Writing on minds, machines, and philosophy. Making the art that emerges in-between. Engineer at Falconer in San Francisco. Currently working on cortical memory architectures and the philosophy of artificial recall.',
     '',
-    '## Essays',
+    '## Writings',
     '',
-    ...essays.map(e => `- [${e.data.title}](${site}/essays/${e.id}): ${e.data.summary}`),
+    ...writings.map(e => `- [${e.data.title}](${site}/writings/${e.id}): ${e.data.summary}`),
     '',
     '## Poems',
     '',
@@ -24,7 +24,7 @@ export async function GET(context: APIContext) {
     '## About',
     '',
     `- [Home](${site}/)`,
-    `- [All essays](${site}/essays)`,
+    `- [All writings](${site}/writings)`,
     `- [All poems](${site}/poems)`,
     `- [RSS](${site}/rss.xml)`,
     `- [JSON Feed](${site}/feed.json)`,

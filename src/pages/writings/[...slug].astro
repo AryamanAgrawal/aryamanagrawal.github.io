@@ -3,22 +3,22 @@ import Base from '@/layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const essays = await getCollection('essays', ({ data }) => !data.draft);
-  return essays.map(essay => ({ params: { slug: essay.id }, props: { essay } }));
+  const writings = await getCollection('writings', ({ data }) => !data.draft);
+  return writings.map(writing => ({ params: { slug: writing.id }, props: { writing } }));
 }
 
-const { essay } = Astro.props;
-const { Content } = await render(essay);
+const { writing } = Astro.props;
+const { Content } = await render(writing);
 const site = Astro.site!.toString().replace(/\/$/, '');
-const url = `${site}/essays/${essay.id}`;
+const url = `${site}/writings/${writing.id}`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
-  headline: essay.data.title,
-  description: essay.data.summary,
-  datePublished: essay.data.date.toISOString(),
-  dateModified: essay.data.date.toISOString(),
+  headline: writing.data.title,
+  description: writing.data.summary,
+  datePublished: writing.data.date.toISOString(),
+  dateModified: writing.data.date.toISOString(),
   author: {
     '@type': 'Person',
     name: 'Aryaman Agrawal',
@@ -31,12 +31,12 @@ const jsonLd = {
   },
   url,
   mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-  keywords: essay.data.tags?.join(', '),
+  keywords: writing.data.tags?.join(', '),
 };
 
-const fmt = essay.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+const fmt = writing.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 ---
-<Base title={essay.data.title} description={essay.data.summary} type="article" publishedTime={essay.data.date} jsonLd={jsonLd} ogSlug={`essays/${essay.id}`}>
+<Base title={writing.data.title} description={writing.data.summary} type="article" publishedTime={writing.data.date} jsonLd={jsonLd} ogSlug={`writings/${writing.id}`}>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" />
 
   <main class="page">
@@ -44,9 +44,9 @@ const fmt = essay.data.date.toLocaleDateString('en-US', { month: 'short', year: 
     <div class="row">
       <div class="meta">{fmt}</div>
       <div class="body">
-        <p class="kicker"><a href="/essays">← Essays</a></p>
-        <h1 class="essay-title">{essay.data.title}</h1>
-        {essay.data.summary && <p class="lede">{essay.data.summary}</p>}
+        <p class="kicker"><a href="/writings">← Writings</a></p>
+        <h1 class="writing-title">{writing.data.title}</h1>
+        {writing.data.summary && <p class="lede">{writing.data.summary}</p>}
       </div>
     </div>
 
@@ -61,7 +61,7 @@ const fmt = essay.data.date.toLocaleDateString('en-US', { month: 'short', year: 
 </Base>
 
 <style>
-  .essay-title {
+  .writing-title {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: var(--t-49);

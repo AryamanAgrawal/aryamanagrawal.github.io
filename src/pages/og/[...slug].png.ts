@@ -3,17 +3,17 @@ import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
 type AnyEntry =
-  | CollectionEntry<'essays'>
+  | CollectionEntry<'writings'>
   | CollectionEntry<'poems'>
   | CollectionEntry<'photos'>
   | CollectionEntry<'sketches'>;
 
 interface PageMeta {
-  type: 'home' | 'essay' | 'poem' | 'photo' | 'sketch';
+  type: 'home' | 'writing' | 'poem' | 'photo' | 'sketch';
   entry?: AnyEntry;
 }
 
-const essays = await getCollection('essays', ({ data }) => !data.draft);
+const writings = await getCollection('writings', ({ data }) => !data.draft);
 const poems = await getCollection('poems', ({ data }) => !data.draft);
 const photos = await getCollection('photos', ({ data }) => !data.draft);
 const sketches = await getCollection('sketches', ({ data }) => !data.draft);
@@ -22,7 +22,7 @@ const tag = (e: AnyEntry, type: PageMeta['type']): PageMeta => ({ type, entry: e
 
 const pages: Record<string, PageMeta> = {
   home: { type: 'home' },
-  ...Object.fromEntries(essays.map(e => [`essays/${e.id}`, tag(e, 'essay')])),
+  ...Object.fromEntries(writings.map(e => [`writings/${e.id}`, tag(e, 'writing')])),
   ...Object.fromEntries(poems.map(e => [`poems/${e.id}`, tag(e, 'poem')])),
   ...Object.fromEntries(photos.map(e => [`photos/${e.id}`, tag(e, 'photo')])),
   ...Object.fromEntries(sketches.map(e => [`sketches/${e.id}`, tag(e, 'sketch')])),

@@ -3,18 +3,18 @@ import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
   const site = context.site!.toString().replace(/\/$/, '');
-  const essays = await getCollection('essays', ({ data }) => !data.draft);
+  const writings = await getCollection('writings', ({ data }) => !data.draft);
   const poems = await getCollection('poems', ({ data }) => !data.draft);
 
   const items = [
-    ...essays.map(e => ({
-      id: `${site}/essays/${e.id}`,
-      url: `${site}/essays/${e.id}`,
+    ...writings.map(e => ({
+      id: `${site}/writings/${e.id}`,
+      url: `${site}/writings/${e.id}`,
       title: e.data.title,
       summary: e.data.summary,
       content_text: e.data.summary,
       date_published: e.data.date.toISOString(),
-      tags: ['essay', ...(e.data.tags ?? [])],
+      tags: ['writing', ...(e.data.tags ?? [])],
       authors: [{ name: 'Aryaman Agrawal', url: site }],
     })),
     ...poems.map(p => ({

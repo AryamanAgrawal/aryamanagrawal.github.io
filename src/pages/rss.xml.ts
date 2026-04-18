@@ -3,16 +3,16 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const essays = await getCollection('essays', ({ data }) => !data.draft);
+  const writings = await getCollection('writings', ({ data }) => !data.draft);
   const poems = await getCollection('poems', ({ data }) => !data.draft);
 
   const items = [
-    ...essays.map(e => ({
+    ...writings.map(e => ({
       title: e.data.title,
       pubDate: e.data.date,
       description: e.data.summary,
-      link: `/essays/${e.id}`,
-      categories: ['essay', ...(e.data.tags ?? [])],
+      link: `/writings/${e.id}`,
+      categories: ['writing', ...(e.data.tags ?? [])],
     })),
     ...poems.map(p => ({
       title: p.data.title,
