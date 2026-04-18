@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
   const lines = [
     '# Aryaman Agrawal',
     '',
-    '> Writing on minds, machines, and philosophy. Making the art that emerges between. Engineer at Falconer in San Francisco. Currently working on cortical memory architectures and the philosophy of artificial recall.',
+    '> Writing on minds, machines, and philosophy. Making the art that emerges in-between. Engineer at Falconer in San Francisco. Currently working on cortical memory architectures and the philosophy of artificial recall.',
     '',
     '## Essays',
     '',

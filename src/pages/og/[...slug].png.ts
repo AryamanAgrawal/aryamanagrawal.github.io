@@ -43,7 +43,7 @@ const route = await OGImageRoute({
   getImageOptions: (_path, page: PageMeta) => {
     if (page.type === 'home') {
       return {
-        title: 'Writing on minds, machines, and philosophy. Making the art that emerges between.',
+        title: 'Writing on minds, machines, and philosophy. Making the art that emerges in-between.',
         description: 'ARYAMAN AGRAWAL · SAN FRANCISCO',
         bgGradient: [[12, 13, 16]],
         border: { width: 0, color: [12, 13, 16] },
