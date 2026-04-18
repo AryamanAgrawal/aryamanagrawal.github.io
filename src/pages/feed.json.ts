@@ -34,7 +34,7 @@ export async function GET(context: APIContext) {
         title: 'Aryaman Agrawal',
         home_page_url: site,
         feed_url: `${site}/feed.json`,
-        description: 'Writing about memory, agents, and the things in between.',
+        description: 'Writing on minds, machines, and philosophy. Making the art that emerges between.',
         authors: [{ name: 'Aryaman Agrawal', url: site }],
         language: 'en',
         items,

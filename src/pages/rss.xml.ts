@@ -25,7 +25,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'Aryaman Agrawal',
-    description: 'Writing about memory, agents, and the things in between.',
+    description: 'Writing on minds, machines, and philosophy. Making the art that emerges between.',
     site: context.site!,
     items,
   });
