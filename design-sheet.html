@@ -1163,6 +1163,135 @@
   </p>
 
 
+  <!-- ============================================================ -->
+  <!-- 07 — REFERENCES & MARGINALIA                                  -->
+  <!-- ============================================================ -->
+  <div class="section-label" style="margin-top: var(--s-16);">07 — References &amp; marginalia</div>
+  <h2 class="section-title">One library. Two voices.</h2>
+  <p class="section-desc">
+    A shared system for citing sources and annotating prose across every content type. One central
+    <code>references.bib</code> feeds <code>rehype-citation</code> for academic-style inline cites and
+    auto-generated bibliographies on research writings. A single <code>&lt;Sidenote&gt;</code> MDX component
+    handles Tufte-style gutter annotations for poems, photo captions, and light asides. Same typography,
+    same grid, different registers.
+  </p>
+
+  <!-- Inline citation + bibliography mock -->
+  <div class="variant palette-b acc-cyan">
+    <div class="variant-head">
+      <span class="name">Mode A — Academic citation (writings)</span>
+      <span class="tag">rehype-citation · APA CSL · central .bib</span>
+    </div>
+
+    <div style="max-width: 720px; margin: var(--s-12) auto; font-family: var(--font-prose); font-size: var(--t-20); line-height: 1.7; color: var(--c-text);">
+
+      <p style="margin: 0 0 var(--s-6);">
+        In every known case, affective morality is grounded in subjective experience.
+        Anderson and colleagues
+        <a href="#r-anderson-1999" style="color: var(--c-info); border-bottom: 1px dotted currentColor; text-decoration: none;">(Anderson et&nbsp;al., 1999)</a>
+        studied individuals with early vmPFC damage and found their moral reasoning capped at an
+        egocentric level despite intact intelligence. A meta-analysis across 23 studies
+        <a href="#r-marshall-2018" style="color: var(--c-info); border-bottom: 1px dotted currentColor; text-decoration: none;">(Marshall et&nbsp;al., 2018)</a>
+        reached a parallel conclusion: psychopathic traits barely correlate with moral
+        <em>knowledge</em> — the deficit is in <em>caring</em>.
+      </p>
+
+      <p style="margin: var(--s-8) 0 0; font-size: var(--t-14); color: var(--c-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.12em;">
+        Hover any citation for preview · click to jump to references
+      </p>
+
+      <hr style="border: none; border-top: 1px solid var(--c-line); margin: var(--s-12) 0;" />
+
+      <div style="font-family: var(--font-mono); font-size: var(--t-12); color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: var(--s-6);">References · auto-generated</div>
+
+      <ol style="list-style: none; padding: 0; margin: 0; font-family: var(--font-prose); font-size: var(--t-14); line-height: 1.55; color: var(--c-text); counter-reset: refs;">
+        <li id="r-anderson-1999" style="padding: var(--s-3) 0; border-bottom: 1px solid var(--c-line);">
+          Anderson, S. W., Bechara, A., Damasio, H., Tranel, D., &amp; Damasio, A. R. (1999).
+          Impairment of social and moral behavior related to early damage in human prefrontal cortex.
+          <em>Nature Neuroscience</em>, <em>2</em>(11), 1032&ndash;1037.
+        </li>
+        <li id="r-marshall-2018" style="padding: var(--s-3) 0; border-bottom: 1px solid var(--c-line);">
+          Marshall, J., Lilienfeld, S. O., Mayberg, H., &amp; Clark, S. E. (2018).
+          The role of psychopathic traits in moral judgment: A meta-analysis.
+          <em>Journal of Abnormal Psychology</em>, <em>127</em>(7), 713&ndash;724.
+        </li>
+      </ol>
+    </div>
+
+    <div class="note">
+      <strong>Authoring syntax:</strong> <code>[@anderson1999]</code> inline &rarr; formatted cite + registered
+      for the References section. Only cited entries render. Swap the CSL file to change voice
+      (APA, Chicago, MLA).
+    </div>
+  </div>
+
+  <!-- Sidenote / marginalia mock using ledger grid -->
+  <div class="variant palette-b acc-cyan" style="margin-top: var(--s-12);">
+    <div class="variant-head">
+      <span class="name">Mode B — Sidenotes &amp; marginalia (all content)</span>
+      <span class="tag">&lt;Sidenote&gt; MDX · gutter-mounted · Tufte register</span>
+    </div>
+
+    <div style="
+      display: grid;
+      grid-template-columns: [gutter-start] 10rem [body-start] minmax(0, 36rem) [body-end];
+      column-gap: 2rem;
+      max-width: 720px;
+      margin: var(--s-12) auto;
+      padding: 0 var(--s-4);
+    ">
+      <div style="grid-column: gutter-start / body-start; font-family: var(--font-mono); font-size: var(--t-12); color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.12em; text-align: right; padding-top: 2px; line-height: 1.4;">
+        Sep 2022
+      </div>
+      <div style="grid-column: body-start / body-end; font-family: var(--font-prose); font-size: var(--t-20); line-height: 1.7; color: var(--c-text);">
+        <p style="margin: 0;">
+          <em>The Storm Within</em> — he glides above us, a sight unseen,
+          <sup style="color: var(--c-info); font-family: var(--font-mono); font-size: 0.65em; margin-left: 1px; cursor: help;">[1]</sup>
+          yet persistent with eyes so keen.
+        </p>
+      </div>
+
+      <!-- sidenote anchored in the gutter, baseline-aligned with the marked line -->
+      <div style="grid-column: gutter-start / body-start; margin-top: var(--s-4); font-family: var(--font-prose); font-style: italic; font-size: var(--t-12); color: var(--c-muted); line-height: 1.5; text-align: right;">
+        <span style="color: var(--c-info); font-family: var(--font-mono); font-style: normal; font-size: 0.9em; margin-right: 4px;">[1]</span>
+        Written after watching a hawk circle the canyon for twenty minutes without flapping once.
+      </div>
+      <div style="grid-column: body-start / body-end; margin-top: var(--s-4); font-family: var(--font-prose); font-size: var(--t-20); line-height: 1.7; color: var(--c-text);">
+        <p style="margin: 0;">
+          Bid him adieu, or not — he remains. Not greens, not streams, nothing of terrain.
+        </p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Authoring syntax:</strong> <code>&lt;Sidenote&gt;Written after watching a hawk…&lt;/Sidenote&gt;</code>
+      inline in MDX. Renders in the gutter on desktop; collapses to an inline footnote on mobile
+      (where the gutter column disappears). Works in writings, poems, photo captions, and sketches alike.
+    </div>
+  </div>
+
+  <!-- Shared component library -->
+  <div class="variant palette-b acc-cyan" style="margin-top: var(--s-12);">
+    <div class="variant-head">
+      <span class="name">Shared MDX component library</span>
+      <span class="tag">one voice across content types</span>
+    </div>
+
+    <div style="font-family: var(--font-prose); font-size: var(--t-16); line-height: 1.7; max-width: 720px; margin: var(--s-8) auto;">
+      <ul style="padding-left: 1.4em; margin: 0;">
+        <li><code>&lt;Cite id="anderson1999" /&gt;</code> &mdash; inline parenthetical, hover preview, auto-registers for References</li>
+        <li><code>&lt;Sidenote&gt;…&lt;/Sidenote&gt;</code> &mdash; gutter annotation, collapses to footnote on narrow viewports</li>
+        <li><code>&lt;Figure caption="…" credit="…" /&gt;</code> &mdash; image with italic caption + optional credit line</li>
+        <li><code>&lt;Epigraph author="…" source="…" /&gt;</code> &mdash; opening quotation block for essays and poems</li>
+      </ul>
+      <p style="margin-top: var(--s-6); color: var(--c-muted); font-size: var(--t-14);">
+        All four resolve the same tokens (<code>--font-prose</code>, <code>--font-mono</code>,
+        <code>--c-accent</code>, <code>--c-muted</code>), so the typographic voice stays coherent
+        whether you're citing a neuroscience paper or annotating a poem.
+      </p>
+    </div>
+  </div>
+
 </div>
 
 </body>
