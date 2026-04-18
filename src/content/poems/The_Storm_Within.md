@@ -1,6 +1,6 @@
 ---
 title: The Storm Within
-date: 2026-04-17
+date: 2022-09-01
 ---
 
 O child, O sufferer of sorrows
