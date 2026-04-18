@@ -1,0 +1,80 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const essays = await getCollection('essays', ({ data }) => !data.draft);
+  return essays.map(essay => ({ params: { slug: essay.id }, props: { essay } }));
+}
+
+const { essay } = Astro.props;
+const { Content } = await render(essay);
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = `${site}/essays/${essay.id}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: essay.data.title,
+  description: essay.data.summary,
+  datePublished: essay.data.date.toISOString(),
+  dateModified: essay.data.date.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: 'Aryaman Agrawal',
+    url: site,
+    sameAs: [
+      'https://github.com/AryamanAgrawal',
+      'https://www.linkedin.com/in/aryamanagraw/',
+      'https://x.com/AryamanAgrawal5',
+    ],
+  },
+  url,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  keywords: essay.data.tags?.join(', '),
+};
+
+const fmt = essay.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+---
+<Base title={essay.data.title} description={essay.data.summary} type="article" publishedTime={essay.data.date} jsonLd={jsonLd} ogSlug={`essays/${essay.id}`}>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" />
+
+  <main class="page">
+
+    <div class="row">
+      <div class="meta">{fmt}</div>
+      <div class="body">
+        <p class="kicker"><a href="/essays">← Essays</a></p>
+        <h1 class="essay-title">{essay.data.title}</h1>
+        {essay.data.summary && <p class="lede">{essay.data.summary}</p>}
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="meta"></div>
+      <div class="body prose"><Content /></div>
+    </div>
+
+  </main>
+</Base>
+
+<style>
+  .essay-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--t-49);
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .lede {
+    font-family: var(--font-prose);
+    font-size: var(--t-20);
+    color: var(--c-text);
+    opacity: 0.85;
+    line-height: 1.5;
+    margin: var(--s-6) 0 0;
+  }
+</style>

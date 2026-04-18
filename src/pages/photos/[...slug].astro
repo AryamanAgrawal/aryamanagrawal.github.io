@@ -1,0 +1,66 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const photos = await getCollection('photos', ({ data }) => !data.draft);
+  return photos.map(photo => ({ params: { slug: photo.id }, props: { photo } }));
+}
+
+const { photo } = Astro.props;
+const { Content } = await render(photo);
+const fmt = photo.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+---
+<Base title={photo.data.title} description={photo.data.summary} type="article" publishedTime={photo.data.date} ogSlug={`photos/${photo.id}`}>
+  <main class="page">
+
+    <div class="row">
+      <div class="meta">{fmt}</div>
+      <div class="body">
+        <p class="kicker"><a href="/photos">← Rolls</a></p>
+        <h1 class="essay-title">{photo.data.title}</h1>
+        {photo.data.rollName && (
+          <p class="roll-meta">
+            {photo.data.rollName}{photo.data.frameCount ? ` · ${photo.data.frameCount} frames` : ''}
+          </p>
+        )}
+        {photo.data.summary && <p class="lede">{photo.data.summary}</p>}
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="meta"></div>
+      <div class="body prose"><Content /></div>
+    </div>
+
+  </main>
+</Base>
+
+<style>
+  .essay-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--t-49);
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .roll-meta {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: var(--s-4) 0 0;
+  }
+  .lede {
+    font-family: var(--font-prose);
+    font-size: var(--t-20);
+    color: var(--c-text);
+    opacity: 0.85;
+    line-height: 1.5;
+    margin: var(--s-6) 0 0;
+  }
+</style>

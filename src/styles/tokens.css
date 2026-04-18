@@ -1,0 +1,68 @@
+/* ============================================================
+   Observatory — design tokens.
+   Dark is the default and locked. Light is the counterpart.
+   See design-sheet.html for full rationale.
+   ============================================================ */
+
+:root {
+  /* Type — same in both themes */
+  --font-display: 'Inter Tight', system-ui, sans-serif;
+  --font-ui:      'Inter', system-ui, sans-serif;
+  --font-prose:   'Newsreader', Georgia, serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* Type scale (1.25 modular) */
+  --t-12: 0.75rem;
+  --t-14: 0.875rem;
+  --t-16: 1rem;
+  --t-20: 1.25rem;
+  --t-25: 1.5625rem;
+  --t-31: 1.953rem;
+  --t-39: 2.441rem;
+  --t-49: 3.052rem;
+  --t-61: 3.815rem;
+  --t-76: 4.768rem;
+  --t-95: 5.96rem;
+
+  /* Spacing — same in both themes */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-6: 24px; --s-8: 32px; --s-12: 48px; --s-16: 64px;
+  --s-24: 96px; --s-32: 128px;
+
+  --measure: 64ch;
+  --radius:  2px;
+  --ease:    cubic-bezier(.2, .6, .2, 1);
+
+  /* DARK (default) — Observatory ink charcoal */
+  --c-bg:      #0c0d10;
+  --c-surface: #14161b;
+  --c-line:    #232a36;
+  --c-muted:   #8a92a3;
+  --c-text:    #ece6d6;
+  --c-accent:  #6fb3c4;
+  --c-accent-2:#9bd1de;
+
+  /* Analog-medium colors (used inside their own metaphors only) */
+  --c-paper:        #ece6d6;
+  --c-paper-shadow: #3a342a;
+  --c-ink:          #2d2925;
+  --c-film-meta:    #d97706;
+
+  color-scheme: dark;
+}
+
+/* LIGHT — warm paper counterpart.
+   Inversion logic: paper becomes background, ink becomes text.
+   Cyan stays — it's analogous to both blue-black and warm gray.
+   Muted shifts to warm gray for prose continuity. */
+:root[data-theme="light"] {
+  --c-bg:      #f4eedf;       /* warm paper */
+  --c-surface: #ebe4d2;       /* slightly recessed surface */
+  --c-line:    #d4cab3;       /* warm hairline */
+  --c-muted:   #786f5e;       /* warm prose-grey */
+  --c-text:    #1a1816;       /* charcoal ink */
+  --c-accent:  #2b7a8c;       /* deepened cyan for contrast on paper */
+  --c-accent-2:#1f5d6c;
+
+  color-scheme: light;
+}

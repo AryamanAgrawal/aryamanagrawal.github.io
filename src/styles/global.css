@@ -1,0 +1,253 @@
+@import './tokens.css';
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { color-scheme: dark; }
+
+body {
+  font-family: var(--font-ui);
+  font-feature-settings: 'ss01', 'cv11';
+  background: var(--c-bg);
+  color: var(--c-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 200ms var(--ease);
+}
+a:hover { color: var(--c-accent); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+p { margin: 0; }
+
+::selection { background: var(--c-accent); color: var(--c-bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Smooth theme transitions on color-bearing properties only —
+   not on layout/motion. Skip if reduced-motion. */
+html, body, a, .item-row, .item-title, .item-summary,
+.theme-toggle, .sec-name, .ident, .lede, .kicker, .meta, .now-body {
+  transition:
+    background-color 240ms var(--ease),
+    color 240ms var(--ease),
+    border-color 240ms var(--ease);
+}
+
+/* ============================================================
+   Single-anchor ledger grid — used by every page.
+   One gutter column for metadata, one body column for content.
+   Rows use `display: contents` so they participate in the page grid
+   instead of defining their own. See design-sheet.html for rationale.
+   ============================================================ */
+.page {
+  display: grid;
+  grid-template-columns:
+    [gutter-start] 8rem
+    [body-start]   minmax(0, 44rem) [body-end];
+  column-gap: 2rem;
+  row-gap: var(--s-8);
+  justify-content: center;
+  padding: var(--s-24) var(--s-8);
+}
+
+.row { display: contents; }
+.row > .meta { grid-column: gutter-start / body-start; }
+.row > .body { grid-column: body-start / body-end; }
+
+/* hr stretches across both columns as a visible spine break */
+.page > hr {
+  grid-column: gutter-start / body-end;
+  border: none;
+  border-top: 1px solid var(--c-line);
+  margin: 0;
+}
+
+/* META — right-aligned mono in the gutter */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--t-12);
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: right;
+  padding-top: 6px;
+  line-height: 1.4;
+}
+
+.body { min-width: 0; }
+.italic { font-family: var(--font-prose); font-style: italic; }
+
+/* row-split — body content with right-aligned tail (section headers, footers) */
+.row-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-6);
+}
+
+/* Shared atoms used across pages */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: var(--t-12);
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 var(--s-6);
+}
+.kicker a { color: var(--c-accent); }
+
+.sec-head .meta { padding-top: 12px; }
+.sec-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-31);
+  letter-spacing: -0.02em;
+  color: var(--c-text);
+}
+.sec-all {
+  font-family: var(--font-mono);
+  font-size: var(--t-12);
+  color: var(--c-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-39);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* List items (essays, poems, photos, sketches) */
+.item {
+  display: contents;
+  color: inherit;
+  text-decoration: none;
+}
+.item-title {
+  font-family: var(--font-prose);
+  font-size: var(--t-25);
+  line-height: 1.3;
+  color: var(--c-text);
+  transition: color 200ms var(--ease);
+}
+.item-title.italic { font-style: italic; }
+.item:hover .item-title { color: var(--c-accent); }
+.item-summary {
+  font-family: var(--font-prose);
+  font-size: var(--t-14);
+  color: var(--c-muted);
+  line-height: 1.55;
+  margin-top: var(--s-2);
+  max-width: 60ch;
+}
+
+/* Article body — used by essay/poem/photo detail pages */
+.prose {
+  font-family: var(--font-prose);
+  font-size: var(--t-20);
+  line-height: 1.7;
+  color: var(--c-text);
+}
+.prose > * + * { margin-top: var(--s-6); }
+.prose h2 { font-family: var(--font-display); font-size: var(--t-31); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-top: var(--s-16); }
+.prose h3 { font-family: var(--font-display); font-size: var(--t-25); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; margin-top: var(--s-12); }
+.prose em { font-style: italic; color: var(--c-accent); }
+.prose strong { color: var(--c-text); font-weight: 600; }
+.prose a { color: var(--c-accent); border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+.prose code { font-family: var(--font-mono); font-size: 0.9em; background: var(--c-surface); padding: 2px 6px; border-radius: 2px; }
+.prose pre { background: var(--c-surface); padding: var(--s-6); border-radius: 4px; overflow-x: auto; border: 1px solid var(--c-line); }
+.prose pre code { background: none; padding: 0; }
+.prose blockquote {
+  border-left: 2px solid var(--c-accent);
+  padding-left: var(--s-6);
+  color: var(--c-muted);
+  font-style: italic;
+}
+.prose ul, .prose ol { padding-left: 1.5em; }
+.prose li { margin-top: var(--s-3); }
+.prose hr { border: none; border-top: 1px solid var(--c-line); margin: var(--s-12) 0; }
+.prose img, .prose svg { max-width: 100%; height: auto; }
+
+/* Tables */
+.prose table {
+  font-family: var(--font-ui);
+  font-size: var(--t-14);
+  line-height: 1.5;
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+.prose thead { border-bottom: 1px solid var(--c-line); }
+.prose th {
+  text-align: left;
+  padding: var(--s-3) var(--s-4) var(--s-3) 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-12);
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+.prose td {
+  padding: var(--s-4) var(--s-4) var(--s-4) 0;
+  border-bottom: 1px solid var(--c-line);
+  vertical-align: top;
+}
+
+/* Footer — used by every page */
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: var(--t-12);
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.footer-meta a { color: var(--c-muted); }
+.footer-meta a:hover { color: var(--c-accent); }
+
+/* Mobile — collapse to single column, meta moves above its body sibling */
+@media (max-width: 720px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--s-12) var(--s-6);
+    row-gap: var(--s-6);
+  }
+  .row > .meta, .row > .body { grid-column: 1; }
+  .meta { text-align: left; padding-top: 0; }
+  .row-split { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+}
+
+/* Shiki dual themes — swap by [data-theme] on <html>.
+   Shiki emits CSS vars (--shiki-light / --shiki-dark); we wire them per theme. */
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+:root[data-theme="light"] .astro-code,
+:root[data-theme="light"] .astro-code span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+}

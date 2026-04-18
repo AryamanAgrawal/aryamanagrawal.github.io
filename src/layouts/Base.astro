@@ -1,0 +1,114 @@
+---
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  jsonLd?: Record<string, unknown>;
+  /** OG image slug, e.g. 'home' or 'essays/2026-03-the-deterrence-deficit'. Defaults to 'home'. */
+  ogSlug?: string;
+}
+
+const { title, description, type = 'website', publishedTime, jsonLd, ogSlug = 'home' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(`/og/${ogSlug}.png`, Astro.site);
+const fullTitle = title === 'Aryaman Agrawal' ? title : `${title} — Aryaman Agrawal`;
+const site = Astro.site!.toString().replace(/\/$/, '');
+
+const author = {
+  '@type': 'Person',
+  name: 'Aryaman Agrawal',
+  url: site,
+  sameAs: [
+    'https://github.com/AryamanAgrawal',
+    'https://www.linkedin.com/in/aryamanagraw/',
+    'https://x.com/AryamanAgrawal5',
+  ],
+};
+
+// Default schema for any page; essay/poem pages can override via jsonLd prop.
+const defaultJsonLd = type === 'website'
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Aryaman Agrawal',
+      url: site,
+      description: description ?? 'Writing about memory, agents, and the things in between.',
+      author,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${site}/?q={query}`,
+        'query-input': 'required name=query',
+      },
+    }
+  : null;
+
+const schema = jsonLd ?? defaultJsonLd;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    {/* Apply theme BEFORE first paint to prevent flash, and re-apply
+        after every ClientRouter navigation (which otherwise swaps <html> attrs). */}
+    <script is:inline>
+      (function () {
+        function apply() {
+          var pref = localStorage.getItem('theme') || 'auto';
+          var theme = pref === 'auto'
+            ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+            : pref;
+          var root = document.documentElement;
+          root.dataset.themePref = pref;
+          root.dataset.theme = theme;
+        }
+        apply();
+        // ClientRouter fires astro:after-swap before paint of the new page
+        document.addEventListener('astro:after-swap', apply);
+      })();
+    </script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="alternate" type="application/rss+xml" title="Aryaman Agrawal — RSS" href="/rss.xml" />
+    <link rel="alternate" type="application/feed+json" title="Aryaman Agrawal — JSON Feed" href="/feed.json" />
+
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+    <ThemeToggle />
+  </body>
+</html>

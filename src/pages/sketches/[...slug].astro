@@ -1,0 +1,120 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const sketches = await getCollection('sketches', ({ data }) => !data.draft);
+  return sketches.map(sketch => ({ params: { slug: sketch.id }, props: { sketch } }));
+}
+
+const { sketch } = Astro.props;
+const { Content } = await render(sketch);
+const isLandscape = sketch.data.orientation === 'landscape';
+const fmt = sketch.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+const stamp = sketch.data.date.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit' });
+---
+<Base title={sketch.data.title} type="article" publishedTime={sketch.data.date} ogSlug={`sketches/${sketch.id}`}>
+  <main class="page">
+
+    <div class="row">
+      <div class="meta">{fmt}</div>
+      <div class="body">
+        <p class="kicker"><a href="/sketches">← Notebook</a></p>
+        <h1 class="poem-title">{sketch.data.title}</h1>
+        <p class="page-coords">N{sketch.data.notebook} · p.{sketch.data.page}</p>
+      </div>
+    </div>
+
+    <hr />
+
+    {/* Lit notebook page on a dark desk */}
+    <div class="row">
+      <div class="meta"></div>
+      <div class="body">
+        <div class={`desk ${isLandscape ? 'landscape' : ''}`}>
+          <div class="page-lit">
+            <div class="row-top">
+              <span class="page-num">Notebook {sketch.data.notebook} · p. {sketch.data.page}</span>
+              {sketch.data.marginalia?.topRight && (
+                <span class="margin-note">{sketch.data.marginalia.topRight}</span>
+              )}
+            </div>
+            <img class={`sketch-img ${isLandscape ? 'landscape' : ''}`} src={sketch.data.image} alt={sketch.data.title} />
+            <div class="row-bottom">
+              <span class="stamp">— {stamp}</span>
+              {sketch.data.marginalia?.bottomCaption && (
+                <span class="caption">{sketch.data.marginalia.bottomCaption}</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div class="prose"><Content /></div>
+      </div>
+    </div>
+
+  </main>
+</Base>
+
+<style>
+  .poem-title {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--t-49);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .page-coords {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: var(--s-4) 0 0;
+  }
+
+  .desk {
+    padding: var(--s-12);
+    background:
+      radial-gradient(ellipse 80% 60% at 35% 50%, rgba(236,230,214,0.04), transparent 60%),
+      var(--c-bg);
+    border: 1px solid var(--c-line);
+    border-radius: 2px;
+    margin: 0 0 var(--s-12);
+  }
+  .page-lit {
+    background: #ece6d6;
+    color: #2d2925;
+    padding: 28px 32px 32px;
+    border-radius: 1px;
+    background-image: radial-gradient(ellipse 90% 70% at 50% 30%, #f4eedf 0%, #e3dcc9 80%);
+    box-shadow:
+      0 0 0 1px rgba(236, 230, 214, 0.06),
+      0 12px 40px -8px rgba(0, 0, 0, 0.6),
+      0 30px 80px -20px rgba(217, 119, 6, 0.10);
+    transform: rotate(-0.4deg);
+    display: grid;
+    gap: 14px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .desk.landscape .page-lit { transform: rotate(0.3deg); max-width: 100%; }
+
+  .row-top, .row-bottom {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 24px;
+  }
+  .row-bottom { align-items: flex-end; padding-top: 4px; }
+  .page-num, .stamp {
+    font-family: var(--font-mono); font-size: var(--t-12);
+    color: #6a6258; text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .margin-note, .caption {
+    font-family: var(--font-prose); font-style: italic; font-size: var(--t-14);
+    color: #4a4338; line-height: 1.4; text-align: right; max-width: 28ch;
+  }
+  .sketch-img { width: 100%; height: auto; display: block; }
+  .sketch-img.landscape { aspect-ratio: 16/9; object-fit: cover; }
+</style>

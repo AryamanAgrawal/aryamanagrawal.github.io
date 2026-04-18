@@ -1,0 +1,55 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const poems = await getCollection('poems', ({ data }) => !data.draft);
+  return poems.map(poem => ({ params: { slug: poem.id }, props: { poem } }));
+}
+
+const { poem } = Astro.props;
+const { Content } = await render(poem);
+const fmt = poem.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+---
+<Base title={poem.data.title} type="article" publishedTime={poem.data.date} ogSlug={`poems/${poem.id}`}>
+  <main class="page">
+
+    <div class="row">
+      <div class="meta">{fmt}</div>
+      <div class="body">
+        <p class="kicker"><a href="/poems">← Poems</a></p>
+        <h1 class="poem-title">{poem.data.title}</h1>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="meta"></div>
+      <div class="body poem-body"><Content /></div>
+    </div>
+
+  </main>
+</Base>
+
+<style>
+  .poem-title {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--t-49);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .poem-body {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-size: var(--t-20);
+    line-height: 1.8;
+    color: var(--c-text);
+    max-width: 38rem;  /* tighter measure for verse */
+  }
+  .poem-body :global(p) { margin-top: var(--s-6); }
+  .poem-body :global(p:first-child) { margin-top: 0; }
+</style>

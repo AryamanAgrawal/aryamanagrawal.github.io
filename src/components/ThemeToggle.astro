@@ -1,0 +1,93 @@
+---
+// Theme toggle. Cycles auto → light → dark.
+// Uses transition:persist so DOM + listeners survive ClientRouter navigation.
+// FOUC prevention happens in Base.astro inline script (runs before first paint).
+---
+<button
+  class="theme-toggle"
+  type="button"
+  aria-label="Toggle color theme"
+  data-theme-toggle
+  transition:persist
+>
+  <svg class="ti ti-auto" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M8 2 a6 6 0 0 1 0 12 z" fill="currentColor"/>
+  </svg>
+  <svg class="ti ti-light" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="3" fill="currentColor"/>
+    <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <line x1="8" y1="1.5" x2="8" y2="3.5"/>
+      <line x1="8" y1="12.5" x2="8" y2="14.5"/>
+      <line x1="1.5" y1="8" x2="3.5" y2="8"/>
+      <line x1="12.5" y1="8" x2="14.5" y2="8"/>
+      <line x1="3.3" y1="3.3" x2="4.7" y2="4.7"/>
+      <line x1="11.3" y1="11.3" x2="12.7" y2="12.7"/>
+      <line x1="3.3" y1="12.7" x2="4.7" y2="11.3"/>
+      <line x1="11.3" y1="4.7" x2="12.7" y2="3.3"/>
+    </g>
+  </svg>
+  <svg class="ti ti-dark" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M11 2.5 a6 6 0 1 0 2.5 8 a5 5 0 0 1 -7-7 a6 6 0 0 1 4.5 -1 z" fill="currentColor"/>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    position: fixed;
+    bottom: var(--s-6);
+    right: var(--s-8);
+    z-index: 100;
+    background: var(--c-bg);
+    border: 1px solid var(--c-line);
+    border-radius: 999px;
+    width: 36px; height: 36px;
+    padding: 0;
+    cursor: pointer;
+    color: var(--c-muted);
+    display: inline-grid;
+    place-items: center;
+    transition: color 200ms var(--ease), border-color 200ms var(--ease), background-color 200ms var(--ease);
+  }
+  .theme-toggle:hover { color: var(--c-accent); border-color: var(--c-accent); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 2px; }
+
+  .ti { width: 16px; height: 16px; display: none; }
+  :root[data-theme-pref="auto"]  .ti-auto  { display: block; }
+  :root[data-theme-pref="light"] .ti-light { display: block; }
+  :root[data-theme-pref="dark"]  .ti-dark  { display: block; }
+</style>
+
+<script is:inline>
+  // Document-level delegated handler — survives ClientRouter regardless.
+  // Idempotent: re-runs on each astro:page-load, but only attaches once.
+  (function () {
+    if (window.__themeToggleWired) return;
+    window.__themeToggleWired = true;
+
+    const order = ['auto', 'light', 'dark'];
+
+    function apply(pref) {
+      const root = document.documentElement;
+      root.dataset.themePref = pref;
+      const resolved = pref === 'auto'
+        ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        : pref;
+      root.dataset.theme = resolved;
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-theme-toggle]');
+      if (!btn) return;
+      const current = document.documentElement.dataset.themePref || 'auto';
+      const next = order[(order.indexOf(current) + 1) % order.length];
+      localStorage.setItem('theme', next);
+      apply(next);
+    });
+
+    matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+      const pref = document.documentElement.dataset.themePref || 'auto';
+      if (pref === 'auto') apply('auto');
+    });
+  })();
+</script>

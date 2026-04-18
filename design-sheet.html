@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design Sheet — aryamanagrawal.github.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Tokens (defaults: Variant B, ink blue-black) ---------- */
+  :root {
+    --font-display: 'Inter Tight', system-ui, sans-serif;
+    --font-ui:      'Inter', system-ui, sans-serif;
+    --font-prose:   'Newsreader', Georgia, serif;
+    --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+    /* type scale (1.25) */
+    --t-12: 0.75rem;
+    --t-14: 0.875rem;
+    --t-16: 1rem;
+    --t-20: 1.25rem;
+    --t-25: 1.5625rem;
+    --t-31: 1.953rem;
+    --t-39: 2.441rem;
+    --t-49: 3.052rem;
+    --t-61: 3.815rem;
+    --t-76: 4.768rem;
+    --t-95: 5.96rem;
+
+    /* spacing scale */
+    --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+    --s-6: 24px; --s-8: 32px; --s-12: 48px; --s-16: 64px;
+    --s-24: 96px; --s-32: 128px;
+
+    --radius: 999px;
+    --measure: 64ch;
+    --hairline: 1px solid var(--c-line);
+  }
+
+  /* ---------- Palette variants ---------- */
+  /* Observatory (neutral charcoal, was ink blue-black; tuned per color audit)
+     bg shifted #0a0e14 → #0c0d10 to kill blue cast under photos.
+     muted bumped to #8a92a3 for AA headroom.
+     line lifted to #232a36 for OLED visibility.
+     Primary link = amber (5.2:1, near-complementary). Cyan reserved for meta. */
+  .palette-b {
+    --c-bg:      #0c0d10;
+    --c-surface: #14161b;
+    --c-text:    #ece6d6;
+    --c-muted:   #8a92a3;
+    --c-line:    #232a36;
+    --c-accent:  #6fb3c4;        /* cyan — single accent, links/CTAs/meta */
+    --c-accent-2:#9bd1de;
+    --c-info:    #6fb3c4;        /* alias */
+  }
+  .acc-cyan   { --c-accent:#6fb3c4; --c-accent-2:#9bd1de; }
+
+  /* ---------- Base ---------- */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-ui);
+    font-feature-settings: 'ss01','cv11';
+    background: #050505;
+    color: #ddd;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Page chrome ---------- */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--s-16) var(--s-8);
+  }
+  .topbar {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid #222;
+    padding-bottom: var(--s-6);
+    margin-bottom: var(--s-16);
+  }
+  .topbar h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--t-25);
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: #ece6d6;
+  }
+  .topbar .meta {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #666;
+    margin: var(--s-24) 0 var(--s-4);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--t-39);
+    letter-spacing: -0.02em;
+    color: #ece6d6;
+    margin: 0 0 var(--s-8);
+  }
+  .section-desc {
+    color: #999;
+    max-width: 60ch;
+    margin: 0 0 var(--s-12);
+    line-height: 1.55;
+  }
+
+  /* ---------- Variant block (each is its own theme island) ---------- */
+  .variant {
+    background: var(--c-bg);
+    color: var(--c-text);
+    border: 1px solid var(--c-line);
+    border-radius: 12px;
+    padding: var(--s-12);
+    margin-bottom: var(--s-12);
+    overflow: hidden;
+  }
+  .variant-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid var(--c-line);
+    padding-bottom: var(--s-4);
+    margin-bottom: var(--s-8);
+  }
+  .variant-head .name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--t-20);
+    letter-spacing: -0.01em;
+  }
+  .variant-head .tag {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--s-2);
+    margin-bottom: var(--s-8);
+  }
+  .swatch {
+    aspect-ratio: 1.6;
+    border-radius: 4px;
+    display: flex; align-items: flex-end;
+    padding: var(--s-2) var(--s-3);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    border: 1px solid var(--c-line);
+  }
+
+  /* Sample blog hero inside a variant */
+  .sample {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-12);
+    padding-top: var(--s-8);
+    border-top: 1px solid var(--c-line);
+  }
+  @media (max-width: 800px) { .sample { grid-template-columns: 1fr; } }
+  .sample .left .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--s-4);
+  }
+  .sample .left h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--t-49);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 var(--s-6);
+  }
+  .sample .left .lede {
+    font-family: var(--font-prose);
+    font-size: var(--t-20);
+    line-height: 1.55;
+    color: var(--c-text);
+    opacity: 0.85;
+    margin: 0 0 var(--s-8);
+  }
+  .sample .left .byline {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .sample .right p {
+    font-family: var(--font-prose);
+    font-size: var(--t-16);
+    line-height: 1.7;
+    color: var(--c-text);
+    opacity: 0.88;
+  }
+  .sample .right p a {
+    color: var(--c-accent);
+    border-bottom: 1px solid var(--c-accent);
+    padding-bottom: 1px;
+  }
+
+  /* ---------- Type specimen ---------- */
+  .specimen { padding: var(--s-8) 0; }
+  .specimen .scale-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--s-6);
+    align-items: baseline;
+    border-bottom: 1px dashed var(--c-line);
+    padding: var(--s-4) 0;
+  }
+  .specimen .scale-row .lbl {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .specimen .display { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1; font-weight: 700; color: var(--c-text); }
+  .specimen .prose   { font-family: var(--font-prose); color: var(--c-text); }
+  .specimen .ui      { font-family: var(--font-ui); color: var(--c-text); }
+  .specimen .mono    { font-family: var(--font-mono); color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* ---------- Home pitches ---------- */
+  .pitch-grid { display: flex; flex-direction: column; gap: var(--s-12); }
+  .pitch {
+    background: var(--c-bg);
+    color: var(--c-text);
+    border: 1px solid var(--c-line);
+    border-radius: 12px;
+    padding: var(--s-12);
+  }
+  .pitch h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--t-25);
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--s-2);
+  }
+  .pitch .desc { color: var(--c-muted); margin: 0 0 var(--s-8); max-width: 64ch; line-height: 1.55; }
+
+  /* Sectioned portal — door variant kept for reference; Appleton variant uses inline styles */
+  .home-portal .doors { border-top: 1px solid var(--c-line); }
+  .home-portal .door {
+    display: grid; grid-template-columns: 60px 1fr 60px auto;
+    align-items: center; gap: var(--s-6);
+    padding: var(--s-8) var(--s-2);
+    border-bottom: 1px solid var(--c-line);
+    cursor: pointer;
+    transition: padding-left 220ms cubic-bezier(.2,.6,.2,1), color 220ms;
+  }
+  .home-portal .door:hover { padding-left: var(--s-6); color: var(--c-accent); }
+  .home-portal .door .num { font-family: var(--font-mono); font-size: var(--t-12); color: var(--c-muted); }
+  .home-portal .door .name { font-family: var(--font-display); font-weight: 700; font-size: var(--t-61); letter-spacing: -0.03em; line-height: 1; }
+  .home-portal .door .count { font-family: var(--font-mono); font-size: var(--t-12); color: var(--c-muted); }
+  .home-portal .door .arrow {
+    width: 44px; height: 44px; border-radius: 999px;
+    border: 1px solid var(--c-line);
+    display: grid; place-items: center;
+    transition: transform 220ms, border-color 220ms;
+  }
+  .home-portal .door:hover .arrow { transform: rotate(-45deg); border-color: var(--c-accent); }
+  .home-portal .door .arrow svg { width: 16px; height: 16px; }
+
+  /* ---------- Photography mosaic ---------- */
+  .mosaic {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 120px;
+    gap: var(--s-2);
+    background: var(--c-bg);
+    padding: var(--s-2);
+    border: 1px solid var(--c-line);
+    border-radius: 12px;
+  }
+  .tile {
+    background: var(--c-surface);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 320ms cubic-bezier(.2,.6,.2,1), filter 320ms;
+    cursor: pointer;
+  }
+  .tile:hover { transform: scale(1.012); filter: brightness(1.08); }
+  .tile::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.6) 100%);
+    opacity: 0; transition: opacity 320ms;
+  }
+  .tile:hover::after { opacity: 1; }
+  .tile .cap {
+    position: absolute; left: 12px; bottom: 10px; right: 12px;
+    font-family: var(--font-mono); font-size: var(--t-12);
+    color: #fff; opacity: 0; transition: opacity 320ms;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    z-index: 2;
+  }
+  .tile:hover .cap { opacity: 1; }
+
+  /* tile sizes */
+  .t-2x2 { grid-column: span 2; grid-row: span 2; }
+  .t-2x1 { grid-column: span 2; grid-row: span 1; }
+  .t-1x2 { grid-column: span 1; grid-row: span 2; }
+  .t-3x2 { grid-column: span 3; grid-row: span 2; }
+  .t-3x1 { grid-column: span 3; grid-row: span 1; }
+  .t-1x1 { grid-column: span 1; grid-row: span 1; }
+
+  /* ---------- 35mm Filmstrip ---------- */
+  .filmstrip {
+    background: #050607;
+    padding: 22px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    /* sprocket holes — top and bottom rows */
+    background-image:
+      radial-gradient(circle at 12px 11px, #0c0d10 4.5px, transparent 5px),
+      radial-gradient(circle at 12px calc(100% - 11px), #0c0d10 4.5px, transparent 5px);
+    background-repeat: repeat-x;
+    background-size: 28px 100%, 28px 100%;
+  }
+  .filmstrip-inner {
+    display: flex;
+    gap: 6px;
+    padding: 0 22px;
+    overflow: hidden;
+  }
+  .frame {
+    flex: 1 0 0;
+    aspect-ratio: 3/2;
+    position: relative;
+    border: 1px solid #0c0d10;
+    overflow: hidden;
+    cursor: pointer;
+    transition: filter 320ms;
+  }
+  .frame:hover { filter: brightness(1.15); }
+  .frame .frame-meta {
+    position: absolute; bottom: 4px; left: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: #d97706;            /* exposure-meter orange — only inside the filmstrip frame, like a real DX code overlay */
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 4px #000;
+    z-index: 2;
+  }
+  .filmstrip-leader {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 22px;
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: #5a5a5a;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  /* ---------- Notebook on a desk — lit-page metaphor ----------
+     Page aspect-ratio follows the sketch:
+       portrait sketch → portrait page (3/4)
+       landscape sketch → landscape page (4/3)
+     The page sizes itself to its sketch + margins, no empty space below.   */
+
+  .desk {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: var(--s-12);
+    padding: var(--s-12);
+    background:
+      radial-gradient(ellipse 80% 60% at 35% 50%, rgba(236, 230, 214, 0.04), transparent 60%),
+      var(--c-bg);
+    border: 1px solid var(--c-line);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    align-items: start;
+  }
+
+  /* the page — sized by inner sketch, marginalia flows naturally */
+  .page-lit {
+    position: relative;
+    background: #ece6d6;
+    color: #2d2925;
+    padding: 28px 32px 32px;
+    border-radius: 1px;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 50% 30%, #f4eedf 0%, #e3dcc9 80%);
+    box-shadow:
+      0 0 0 1px rgba(236, 230, 214, 0.06),
+      0 12px 40px -8px rgba(0, 0, 0, 0.6),
+      0 30px 80px -20px rgba(217, 119, 6, 0.10);
+    transform: rotate(-0.4deg);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .page-lit.landscape { transform: rotate(0.3deg); }
+
+  /* dog-eared corner */
+  .page-lit::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.10) 50%);
+    pointer-events: none;
+  }
+
+  /* page header row — page number + top-right marginalia */
+  .page-row-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 24px;
+  }
+  .page-num {
+    font-family: var(--font-mono); font-size: var(--t-12);
+    color: #6a6258; text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .page-margin-note {
+    font-family: var(--font-prose); font-style: italic; font-size: var(--t-14);
+    color: #4a4338; line-height: 1.4; text-align: right;
+    max-width: 22ch;
+  }
+  .ink    { color: #2d2925; }
+  .strike { text-decoration: line-through; color: #6a6258; opacity: 0.55; }
+
+  /* the sketch — aspect ratio drives the page shape */
+  .page-sketch {
+    aspect-ratio: 4/5;                /* portrait default */
+    background:
+      radial-gradient(circle at 30% 40%, rgba(45,41,37,0.18), transparent 60%),
+      linear-gradient(135deg, rgba(45,41,37,0.08), rgba(45,41,37,0.02));
+    position: relative;
+    overflow: hidden;
+  }
+  .page-sketch.landscape { aspect-ratio: 16/9; }
+  .page-sketch::before {
+    content: '';
+    position: absolute; inset: 12% 14%;
+    background:
+      linear-gradient(90deg, transparent 49.5%, rgba(45,41,37,0.35) 50%, transparent 50.5%),
+      radial-gradient(circle at 25% 35%, rgba(45,41,37,0.4) 0, transparent 18%),
+      radial-gradient(circle at 70% 60%, rgba(45,41,37,0.3) 0, transparent 22%),
+      radial-gradient(circle at 45% 75%, rgba(45,41,37,0.35) 0, transparent 15%);
+  }
+  .page-sketch::after {
+    content: '';
+    position: absolute; inset: 22% 18% 22% 18%;
+    border: 1.5px solid rgba(45,41,37,0.45);
+    border-radius: 1px;
+    transform: rotate(2deg);
+  }
+
+  /* footer row — date stamp + bottom marginalia caption */
+  .page-row-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 24px;
+    padding-top: 4px;
+  }
+  .page-stamp {
+    font-family: var(--font-mono); font-size: var(--t-12);
+    color: #6a6258; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .page-caption {
+    font-family: var(--font-prose); font-style: italic; font-size: var(--t-14);
+    color: #4a4338; line-height: 1.45;
+    max-width: 36ch; text-align: right;
+  }
+
+  /* desk side — stack of recent pages */
+  .desk-side { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+  .desk-side-label {
+    font-family: var(--font-mono); font-size: var(--t-12);
+    color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 4px;
+  }
+  .recent-page {
+    background: #ece6d6;
+    aspect-ratio: 4/5;
+    border-radius: 1px;
+    box-shadow:
+      0 4px 14px -4px rgba(0,0,0,0.5),
+      0 10px 24px -10px rgba(217, 119, 6, 0.08);
+    cursor: pointer;
+    transition: transform 280ms cubic-bezier(.2,.6,.2,1), box-shadow 280ms;
+    position: relative;
+    overflow: hidden;
+  }
+  .recent-page.landscape { aspect-ratio: 4/3; }
+  .recent-page:nth-child(2) { transform: rotate(0.6deg); }
+  .recent-page:nth-child(3) { transform: rotate(-0.8deg); }
+  .recent-page:nth-child(4) { transform: rotate(0.4deg); }
+  .recent-page:hover {
+    transform: rotate(0deg) translateY(-3px);
+    box-shadow:
+      0 10px 28px -6px rgba(0,0,0,0.6),
+      0 20px 50px -16px rgba(217, 119, 6, 0.18);
+  }
+  .recent-page::before {
+    content: '';
+    position: absolute; inset: 18% 22%;
+    background:
+      linear-gradient(135deg, rgba(45,41,37,0.18), transparent 60%),
+      radial-gradient(circle at 60% 40%, rgba(45,41,37,0.25) 0, transparent 30%);
+  }
+  .recent-page-num {
+    position: absolute; top: 6px; left: 8px;
+    font-family: var(--font-mono); font-size: 9px;
+    color: #6a6258; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+
+  .desk-caption {
+    font-family: var(--font-prose); font-style: italic;
+    color: var(--c-muted); font-size: var(--t-14);
+    margin: var(--s-4) 0 0; line-height: 1.5;
+  }
+
+  /* ---------- Home teaser version: dim warm page chips ----------
+     Restrained-skeuomorphic per research. Tiny warm cards, no full lit panel,
+     no paper noise, no marginalia — just enough warmth to reference the metaphor.   */
+  .pagestack {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s-6);
+  }
+  .pagestack-item {
+    display: flex; flex-direction: column; gap: var(--s-3);
+    text-decoration: none;
+  }
+  .pagestack-chip {
+    aspect-ratio: 4/5;
+    background: linear-gradient(160deg, #3a342a, #2a251e);
+    border-radius: 1px;
+    box-shadow:
+      0 2px 8px -2px rgba(0,0,0,0.7),
+      0 8px 22px -10px rgba(217, 119, 6, 0.06);    /* faint warm spill, not lamplight */
+    position: relative;
+    overflow: hidden;
+    transition: transform 280ms cubic-bezier(.2,.6,.2,1), box-shadow 280ms;
+  }
+  .pagestack-chip.landscape { aspect-ratio: 4/3; }
+  .pagestack-chip::before {
+    /* the "sketch" inside — much more subdued than the dedicated section */
+    content: '';
+    position: absolute; inset: 22% 24%;
+    background:
+      radial-gradient(circle at 35% 40%, rgba(236,230,214,0.06), transparent 60%),
+      linear-gradient(135deg, rgba(236,230,214,0.04), transparent 60%);
+    border: 1px solid rgba(236,230,214,0.08);
+    border-radius: 1px;
+    transform: rotate(1.5deg);
+  }
+  .pagestack-chip-num {
+    position: absolute; top: 8px; left: 10px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(236,230,214,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .pagestack-item:nth-child(2) .pagestack-chip { transform: rotate(0.5deg); }
+  .pagestack-item:nth-child(3) .pagestack-chip { transform: rotate(-0.6deg); }
+  .pagestack-item:nth-child(4) .pagestack-chip { transform: rotate(0.3deg); }
+  .pagestack-item:hover .pagestack-chip {
+    transform: rotate(0deg) translateY(-2px);
+    box-shadow:
+      0 6px 18px -4px rgba(0,0,0,0.75),
+      0 16px 38px -14px rgba(217, 119, 6, 0.14);   /* warm spill brightens slightly on hover */
+  }
+  .pagestack-item:hover .pagestack-title { color: var(--c-accent); }
+
+  .pagestack-title {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-size: var(--t-14);
+    color: var(--c-text);
+    opacity: 0.85;
+    line-height: 1.4;
+    transition: color 200ms;
+  }
+  .pagestack-meta {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Now strip ---------- */
+  .now-line {
+    display: flex; align-items: baseline; gap: var(--s-4);
+    padding: var(--s-6) 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .now-line .pulse {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: var(--c-accent);
+    animation: pulse 2.4s ease-in-out infinite;
+    transform: translateY(-2px);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: translateY(-2px) scale(1); }
+    50%      { opacity: 1.0; transform: translateY(-2px) scale(1.15); }
+  }
+  .now-line .label {
+    font-family: var(--font-mono);
+    font-size: var(--t-12);
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .now-line .body {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-size: var(--t-16);
+    color: var(--c-text);
+    opacity: 0.9;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  /* generated visual content (no real images yet) */
+  .img-1 { background: radial-gradient(circle at 30% 30%, #2a3441, #0a0e14 70%); }
+  .img-2 { background: linear-gradient(135deg, #1a1816, #3a2a1a); }
+  .img-3 { background: radial-gradient(ellipse at 70% 60%, #6fb3c4 0%, #11161e 60%); }
+  .img-4 { background: linear-gradient(180deg, #11161e, #000); }
+  .img-5 { background: radial-gradient(circle at 50% 80%, #b87333 0%, #1a1816 70%); }
+  .img-6 { background: linear-gradient(45deg, #0a0a0a, #2d2925); }
+  .img-7 { background: radial-gradient(circle at 20% 70%, #d97706 0%, #000 80%); }
+  .img-8 { background: linear-gradient(160deg, #11161e, #1c232e, #6fb3c4 200%); }
+
+  /* ---------- Notes ---------- */
+  .note {
+    border-left: 2px solid var(--c-accent, #555);
+    padding: var(--s-2) var(--s-6);
+    margin: var(--s-6) 0 var(--s-12);
+    color: #aaa;
+    font-family: var(--font-prose);
+    font-size: var(--t-16);
+    line-height: 1.55;
+    max-width: 70ch;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="topbar">
+    <h1>Design Sheet — aryamanagrawal.github.io</h1>
+    <span class="meta">v1.0 · locked · canonical reference</span>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- 1. TYPOGRAPHY (Modernist-Serious direction)                   -->
+  <!-- ============================================================ -->
+  <div class="section-label">01 — Typography</div>
+  <h2 class="section-title">Modernist-serious stack</h2>
+  <p class="section-desc">
+    Display + UI: <strong>Inter Tight</strong> (tight grotesk, near-black weights for headlines).
+    Long-form prose: <strong>Newsreader</strong> (warm contemporary serif, real italics).
+    Metadata + labels: <strong>JetBrains Mono</strong> (rectangular, archival feel).
+    All free, all self-hostable. We can swap to Söhne / Geist / Source Serif later if you want paid options.
+  </p>
+
+  <div class="variant palette-b">
+    <div class="variant-head">
+      <span class="name">Type Specimen — on observatory ink</span>
+      <span class="tag">Inter Tight · Newsreader · JetBrains Mono</span>
+    </div>
+    <div class="specimen">
+      <div class="scale-row"><span class="lbl">95 / display</span><span class="display" style="font-size:var(--t-95); font-weight:800;">Memory</span></div>
+      <div class="scale-row"><span class="lbl">61 / h1</span><span class="display" style="font-size:var(--t-61); font-weight:700;">A cortical scaffold for agents</span></div>
+      <div class="scale-row"><span class="lbl">39 / h2</span><span class="display" style="font-size:var(--t-39); font-weight:600;">What it would take to forget gracefully</span></div>
+      <div class="scale-row"><span class="lbl">25 / h3</span><span class="display" style="font-size:var(--t-25); font-weight:600;">Notes on Nagel and the bat</span></div>
+      <div class="scale-row"><span class="lbl">20 / lede</span><span class="prose" style="font-size:var(--t-20); line-height:1.5;">If memory is the thread, then forgetting is the hand that keeps it from tangling.</span></div>
+      <div class="scale-row"><span class="lbl">16 / body</span><span class="prose" style="font-size:var(--t-16); line-height:1.7;">There is something it is like to be a system that remembers — and something else, perhaps, it is like to be one that has just forgotten. The difference is not nothing. <em>It is, in fact, the entire engineering problem.</em></span></div>
+      <div class="scale-row"><span class="lbl">14 / ui</span><span class="ui" style="font-size:var(--t-14);">Read essay → · 12 min · April 2026</span></div>
+      <div class="scale-row"><span class="lbl">12 / mono</span><span class="mono">FILED UNDER · CONSCIOUSNESS · MEMORY · AGENTS</span></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 2. PALETTES — three variants × accent options                 -->
+  <!-- ============================================================ -->
+  <div class="section-label">02 — Palette</div>
+  <h2 class="section-title">Observatory</h2>
+  <p class="section-desc">
+    Single dark palette, single accent. Light counterpart designed later. All foreground colors pass WCAG AA on the
+    bg with headroom. Rationale below.
+  </p>
+
+  <!-- ===== Observatory palette ===== -->
+  <div class="variant palette-b" id="variant-b">
+    <div class="variant-head">
+      <span class="name">Observatory</span>
+      <span class="tag">neutral charcoal · warm off-white · cyan accent</span>
+    </div>
+
+    <div class="swatches">
+      <div class="swatch" style="background:#0c0d10; color:#888">#0c0d10 · bg</div>
+      <div class="swatch" style="background:#14161b; color:#888">#14161b · surface</div>
+      <div class="swatch" style="background:#232a36; color:#aaa">#232a36 · line</div>
+      <div class="swatch" style="background:#8a92a3; color:#000">#8a92a3 · muted</div>
+      <div class="swatch" style="background:#ece6d6; color:#000">#ece6d6 · text</div>
+      <div class="swatch" style="background:#6fb3c4; color:#000">#6fb3c4 · cyan</div>
+    </div>
+
+    <div class="sample acc-cyan" id="vb-sample">
+      <div class="left">
+        <div class="kicker">— Essay · 04.2026</div>
+        <h2>The shape of a forgotten thing.</h2>
+        <p class="lede">Memory is not storage. It is a posture the mind holds toward its own past — and so is forgetting.</p>
+        <div class="byline">Aryaman Agrawal · 14 min read</div>
+      </div>
+      <div class="right">
+        <p>Plato's wax, Camus's absurd, the cortical column — three attempts to describe the same problem from incompatible vocabularies. <a href="#">What if the problem is not storage at all</a>, but the way an agent decides what is worth keeping? The answer, I'll argue, is not algorithmic. It is closer to taste.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Single-accent system: cyan #6fb3c4 only</strong>, used for links, CTAs, hover states, and meta.
+      Analogous to the bg (low tension, quietly cold) — coherent with the observatory/quantum theme; no warm/cool
+      clash. Contrast: text 15.9:1 (AAA), cyan 8.1:1 (AAA), muted 5.6:1 (AA with headroom). Bg #0c0d10 is neutral
+      charcoal — neither blue nor brown, so photographs don't take on a color cast. Warm-on-cool editorial pairing
+      (text #ece6d6 on near-black) follows NYT dark, iA Writer, Are.na, Craig Mod. <em>Exception:</em> warm orange
+      (#d97706) appears only inside analog-medium frames (filmstrip frame metadata) as part of the medium itself,
+      never as a system accent. Warm cream paper (#ece6d6) inside the lit-notebook page is similarly contained.
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- 3. HOME PAGE PITCHES                                          -->
+  <!-- ============================================================ -->
+  <div class="section-label">03 — Home page</div>
+  <h2 class="section-title">Sectioned portal · Appleton variant</h2>
+  <p class="section-desc">
+    Identity sentence + Now strip + four typed sections (Writing, Poems, Photography, Sketches), each in its own
+    typographic voice. Per research, this fits a multimodal literary-research site better than a pure index (which
+    collapses media into one feed) or a hero+recent (which optimizes for newsletter conversion). Closest precedent:
+    <em>maggieappleton.com</em>. Secondary: <em>macwright.com</em>.
+  </p>
+
+  <div class="pitch-grid">
+
+    <!-- Sectioned portal — Appleton variant -->
+    <div class="pitch palette-b acc-cyan home-portal-v2">
+      <h3>Sectioned portal · Appleton variant</h3>
+      <p class="desc">
+        Quiet identity sentence at top, then four typed sections — each surfacing recent items as teasers in its
+        own typographic voice (essays in Newsreader, poems in serif italics, photography as a 35mm filmstrip,
+        sketches as dim warm page chips). The home is both a doorway and a discovery surface.
+      </p>
+
+      <!-- Identity sentence -->
+      <div style="padding: var(--s-12) 0 var(--s-8);">
+        <p style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.12em; margin:0 0 var(--s-4);">— Aryaman Agrawal · San Francisco</p>
+        <p style="font-family:var(--font-display); font-size:var(--t-39); font-weight:600; letter-spacing:-0.02em; line-height:1.15; margin:0; max-width:24ch;">
+          Writing about <em style="font-family:var(--font-prose); font-style:italic; font-weight:400; color:var(--c-accent);">memory</em>, agents, and the things in between.
+        </p>
+        <p style="font-family:var(--font-prose); font-size:var(--t-16); color:var(--c-text); opacity:0.7; max-width:60ch; line-height:1.6; margin:var(--s-6) 0 0;">
+          Engineer at Falconer. Previously: Android, simulations, a black hole that mostly worked.
+        </p>
+      </div>
+
+      <!-- NOW strip — three options to pick from -->
+      <div class="now-line">
+        <span class="pulse" aria-hidden="true"></span>
+        <span class="label">Now</span>
+        <span class="body" id="now-body">
+          teaching agents to forget. listening to Ravel. unsure about most of it.
+        </span>
+      </div>
+
+      <!-- Sections -->
+      <div style="display:flex; flex-direction:column;">
+
+        <!-- WRITING -->
+        <section style="padding: var(--s-12) 0; border-bottom: 1px solid var(--c-line);">
+          <header style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--s-8);">
+            <div>
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.12em;">(01)</span>
+              <span style="font-family:var(--font-display); font-size:var(--t-31); font-weight:700; letter-spacing:-0.02em; margin-left:var(--s-3);">Writing</span>
+            </div>
+            <a href="#" style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-accent); text-transform:uppercase; letter-spacing:0.1em;">All 42 essays →</a>
+          </header>
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="display:grid; grid-template-columns:120px 1fr; gap:var(--s-6); padding:var(--s-4) 0; align-items:baseline;">
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.08em;">Apr 2026</span>
+              <a href="#" style="font-family:var(--font-prose); font-size:var(--t-20); line-height:1.4;">A cortical scaffold for agents</a>
+            </li>
+            <li style="display:grid; grid-template-columns:120px 1fr; gap:var(--s-6); padding:var(--s-4) 0; align-items:baseline;">
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.08em;">Mar 2026</span>
+              <a href="#" style="font-family:var(--font-prose); font-size:var(--t-20); line-height:1.4;">On forgetting, gracefully</a>
+            </li>
+            <li style="display:grid; grid-template-columns:120px 1fr; gap:var(--s-6); padding:var(--s-4) 0; align-items:baseline;">
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.08em;">Mar 2026</span>
+              <a href="#" style="font-family:var(--font-prose); font-size:var(--t-20); line-height:1.4;">Reading Camus in a server room</a>
+            </li>
+          </ul>
+        </section>
+
+        <!-- POEMS -->
+        <section style="padding: var(--s-12) 0; border-bottom: 1px solid var(--c-line);">
+          <header style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--s-8);">
+            <div>
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.12em;">(02)</span>
+              <span style="font-family:var(--font-display); font-size:var(--t-31); font-weight:700; letter-spacing:-0.02em; margin-left:var(--s-3);">Poems</span>
+            </div>
+            <a href="#" style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-accent); text-transform:uppercase; letter-spacing:0.1em;">All 11 →</a>
+          </header>
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-8);">
+            <a href="#" style="display:block;">
+              <div style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:var(--s-3);">Jan 2026</div>
+              <div style="font-family:var(--font-prose); font-style:italic; font-size:var(--t-20); line-height:1.4;">Two poems for an empty room</div>
+            </a>
+            <a href="#" style="display:block;">
+              <div style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:var(--s-3);">Dec 2025</div>
+              <div style="font-family:var(--font-prose); font-style:italic; font-size:var(--t-20); line-height:1.4;">Letter to a younger self, in five parts</div>
+            </a>
+            <a href="#" style="display:block;">
+              <div style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:var(--s-3);">Nov 2025</div>
+              <div style="font-family:var(--font-prose); font-style:italic; font-size:var(--t-20); line-height:1.4;">Sonnet for a quantum field</div>
+            </a>
+          </div>
+        </section>
+
+        <!-- PHOTOGRAPHY -->
+        <section style="padding: var(--s-12) 0; border-bottom: 1px solid var(--c-line);">
+          <header style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--s-8);">
+            <div>
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.12em;">(03)</span>
+              <span style="font-family:var(--font-display); font-size:var(--t-31); font-weight:700; letter-spacing:-0.02em; margin-left:var(--s-3);">Photography</span>
+            </div>
+            <a href="#" style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-accent); text-transform:uppercase; letter-spacing:0.1em;">All 86 →</a>
+          </header>
+          <!-- 35mm negative strip -->
+          <div class="filmstrip">
+            <div class="filmstrip-inner">
+              <div class="frame img-1"><span class="frame-meta">01 · F2.0 · 04:14</span></div>
+              <div class="frame img-3"><span class="frame-meta">02 · F1.4 · 06:32</span></div>
+              <div class="frame img-2"><span class="frame-meta">03 · F2.8 · 17:48</span></div>
+              <div class="frame img-4"><span class="frame-meta">04 · F4.0 · 22:01</span></div>
+              <div class="frame img-7"><span class="frame-meta">05 · F1.8 · 03:12</span></div>
+              <div class="frame img-5"><span class="frame-meta">06 · F2.0 · 19:55</span></div>
+            </div>
+            <div class="filmstrip-leader">
+              <span>Kodak Portra 400 · Roll 14</span>
+              <span>San Francisco, in fog · 02.2026</span>
+              <span>→ 14 frames</span>
+            </div>
+          </div>
+          <p style="font-family:var(--font-prose); font-style:italic; color:var(--c-muted); font-size:var(--t-14); margin: var(--s-4) 0 0; line-height:1.5;">
+            — Photography presented as contact sheets and rolls. Click a frame for the full essay; click the leader to scan the entire roll.
+          </p>
+        </section>
+
+        <!-- SKETCHES -->
+        <section style="padding: var(--s-12) 0;">
+          <header style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--s-8);">
+            <div>
+              <span style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.12em;">(04)</span>
+              <span style="font-family:var(--font-display); font-size:var(--t-31); font-weight:700; letter-spacing:-0.02em; margin-left:var(--s-3);">Sketches</span>
+            </div>
+            <a href="#" style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-accent); text-transform:uppercase; letter-spacing:0.1em;">All 23 →</a>
+          </header>
+          <!-- Home teaser: dim warm page chips. Restrained per Craig Mod / research.
+               The bright lit page lives in the dedicated /sketches section below. -->
+          <div class="pagestack">
+            <a href="#" class="pagestack-item">
+              <div class="pagestack-chip"><span class="pagestack-chip-num">N04 · p.23</span></div>
+              <div class="pagestack-title">The shape of a forgotten thing</div>
+              <div class="pagestack-meta">04.04.26</div>
+            </a>
+            <a href="#" class="pagestack-item">
+              <div class="pagestack-chip landscape"><span class="pagestack-chip-num">N04 · p.21</span></div>
+              <div class="pagestack-title">Memory consolidation, take 3</div>
+              <div class="pagestack-meta">03.28.26</div>
+            </a>
+            <a href="#" class="pagestack-item">
+              <div class="pagestack-chip"><span class="pagestack-chip-num">N04 · p.18</span></div>
+              <div class="pagestack-title">Feedback loop, accretion model</div>
+              <div class="pagestack-meta">03.14.26</div>
+            </a>
+            <a href="#" class="pagestack-item">
+              <div class="pagestack-chip landscape"><span class="pagestack-chip-num">N03 · p.44</span></div>
+              <div class="pagestack-title">Two-mass orbit, by hand</div>
+              <div class="pagestack-meta">02.09.26</div>
+            </a>
+          </div>
+          <p style="font-family:var(--font-prose); font-style:italic; color:var(--c-muted); font-size:var(--t-14); margin: var(--s-4) 0 0; line-height:1.5;">
+            — Home teaser is dim and restrained. The full lit-page treatment lives in the dedicated section (preview below).
+          </p>
+        </section>
+
+      </div>
+
+      <!-- Colophon footer (closes early so we can show the dedicated /sketches preview outside the home pitch) -->
+      <footer style="border-top: 1px solid var(--c-line); padding-top: var(--s-8); margin-top: var(--s-8); display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-muted); text-transform:uppercase; letter-spacing:0.1em;">
+        <span>Built with Astro · MDX · GSAP</span>
+        <span><a href="#" style="color:var(--c-muted);">Email</a> · <a href="#" style="color:var(--c-muted);">Twitter</a> · <a href="#" style="color:var(--c-muted);">GitHub</a> · <a href="#" style="color:var(--c-muted);">RSS</a></span>
+      </footer>
+
+      <div class="note" style="margin-top: var(--s-12);">
+        <strong>Section voices on the home:</strong>
+        Writing = serif index (date / title). Poems = three-column italic serif titles. Photography = 35mm filmstrip
+        (sprocket holes, exposure-meter orange frame metadata, film-leader caption). Sketches = dim warm page chips
+        with italic titles. Each section links to its own dedicated page where the visual treatment intensifies.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 03b — Dedicated /sketches section (full lit notebook)         -->
+  <!-- ============================================================ -->
+  <div class="section-label">03b — Dedicated /sketches section</div>
+  <h2 class="section-title">Inside the notebook</h2>
+  <p class="section-desc">
+    The full lit-cream-page treatment lives here, not on the home. Per research:
+    restrained-skeuomorphic — lit cream panel + SVG paper noise + Tufte italic marginalia + Andy-Matuschak-style
+    <code>?stack=</code> side chips + 2D slide-fade transitions (no 3D page-turn). Page orientation follows the sketch.
+  </p>
+
+  <div class="variant palette-b">
+    <div class="variant-head">
+      <span class="name">/sketches — full lit notebook</span>
+      <span class="tag">portrait + landscape · marginalia · paper noise</span>
+    </div>
+
+          <!-- SVG noise filter, used by .page-lit for paper grain -->
+          <svg width="0" height="0" style="position:absolute;">
+            <filter id="paper-grain">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+              <feColorMatrix values="0 0 0 0 0.18  0 0 0 0 0.16  0 0 0 0 0.14  0 0 0 0.08 0"/>
+            </filter>
+          </svg>
+
+          <!-- Portrait sketch — page sized to the sketch -->
+          <div class="desk">
+            <a href="#" class="page-lit" style="text-decoration:none;">
+              <div class="page-row-top">
+                <span class="page-num">Notebook 04 · p. 23</span>
+                <span class="page-margin-note">
+                  <span class="ink">memory ≠ storage.</span><br/>
+                  <span class="strike">retrieval is the act</span><br/>
+                  <em>posture</em> is the act.
+                </span>
+              </div>
+              <div class="page-sketch" style="filter:url(#paper-grain) saturate(1);"></div>
+              <div class="page-row-bottom">
+                <span class="page-stamp">— 04.04.26 · 02:11</span>
+                <span class="page-caption">
+                  — if forgetting is structural, what is the <span class="ink">shape</span> of a thing that has <em>just</em> been forgotten?
+                </span>
+              </div>
+            </a>
+
+            <div class="desk-side">
+              <div class="desk-side-label">Recent pages</div>
+              <a href="#" class="recent-page"><span class="recent-page-num">N04 · p.21</span></a>
+              <a href="#" class="recent-page"><span class="recent-page-num">N04 · p.18</span></a>
+              <a href="#" class="recent-page"><span class="recent-page-num">N03 · p.44</span></a>
+            </div>
+          </div>
+
+          <!-- Landscape sketch — same metaphor, wider page -->
+          <div class="desk" style="margin-top: var(--s-8);">
+            <a href="#" class="page-lit landscape" style="text-decoration:none;">
+              <div class="page-row-top">
+                <span class="page-num">Notebook 04 · p. 26</span>
+                <span class="page-margin-note">
+                  <em>black hole</em>, take 4.<br/>
+                  <span class="strike">accretion disk too thin</span><br/>
+                  <span class="ink">→ rotate, then sample.</span>
+                </span>
+              </div>
+              <div class="page-sketch landscape"></div>
+              <div class="page-row-bottom">
+                <span class="page-stamp">— 04.07.26 · 23:48</span>
+                <span class="page-caption">
+                  — landscape page for landscape sketch. The orientation of the paper follows the orientation of the work.
+                </span>
+              </div>
+            </a>
+
+            <div class="desk-side">
+              <div class="desk-side-label">Recent pages</div>
+              <a href="#" class="recent-page landscape"><span class="recent-page-num">N04 · p.24</span></a>
+              <a href="#" class="recent-page landscape"><span class="recent-page-num">N04 · p.20</span></a>
+              <a href="#" class="recent-page"><span class="recent-page-num">N03 · p.44</span></a>
+            </div>
+          </div>
+
+    <div class="note" style="margin-top: var(--s-8);">
+      Page orientation follows the sketch — portrait for portrait work, landscape for landscape. Marginalia in italic
+      Newsreader (Tufte grammar): top-right running thought, bottom-right caption, date stamp. Side chips use the
+      Andy Matuschak <code>?stack=</code> pattern: clicking a recent page slides it in as a new lit panel; older pages
+      don't replace, they queue.
+    </div>
+
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- 4. PHOTOGRAPHY — mosaic concept                               -->
+  <!-- ============================================================ -->
+  <div class="section-label">04 — Photography</div>
+  <h2 class="section-title">Curated essay + Flip lightbox</h2>
+  <p class="section-desc">
+    Per gallery research, the recommendation is a <strong>curated essay column</strong> — single column, image +
+    serif caption pairs, generous whitespace — paired with a <strong>GSAP Flip-powered lightbox</strong> as the one
+    moment of theatrical interaction. The essay column matches the literary register (Craig Mod, gholtz); Flip makes
+    the click-to-expand transition feel inevitable rather than modal-y. Below: an essay sample, then a contact-sheet
+    index for browsing. (Old asymmetric mosaic kept further down as a comparison — collapsed.)
+  </p>
+
+  <!-- Curated essay sample -->
+  <div class="variant palette-b acc-cyan">
+    <div class="variant-head">
+      <span class="name">Photo essay — &ldquo;San Francisco, in fog&rdquo;</span>
+      <span class="tag">curated column · serif captions · Flip lightbox on click</span>
+    </div>
+
+    <div style="max-width: 720px; margin: var(--s-12) auto;">
+      <div class="kicker" style="font-family:var(--font-mono); font-size:var(--t-12); color:var(--c-info); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:var(--s-2);">Photo Essay · 02.2026 · 14 frames</div>
+      <h2 style="font-family:var(--font-display); font-weight:800; font-size:var(--t-49); letter-spacing:-0.025em; line-height:1.05; margin:0 0 var(--s-6);">San Francisco, in fog.</h2>
+      <p style="font-family:var(--font-prose); font-size:var(--t-20); line-height:1.55; opacity:0.85; margin:0 0 var(--s-12);">A small set, made on early walks between November and February. Most mornings the fog reaches Divisadero by six, and is gone by nine.</p>
+
+      <figure style="margin: var(--s-12) 0;">
+        <div class="tile img-1" style="aspect-ratio: 3/2; border-radius: 2px;"></div>
+        <figcaption style="font-family:var(--font-prose); font-style:italic; font-size:var(--t-14); color:var(--c-muted); margin-top:var(--s-3); line-height:1.5;">— Bay Bridge from Pier 14, 04:14. The light from the cables is older than the cables.</figcaption>
+      </figure>
+
+      <p style="font-family:var(--font-prose); font-size:var(--t-16); line-height:1.7; opacity:0.88; margin: var(--s-8) 0;">There is a quietness to a city whose edges are missing. You feel the geometry without seeing it — the bridge is more present in fog than out of it. Camus would have written about this.</p>
+
+      <figure style="margin: var(--s-12) 0;">
+        <div class="tile img-3" style="aspect-ratio: 4/5; border-radius: 2px;"></div>
+        <figcaption style="font-family:var(--font-prose); font-style:italic; font-size:var(--t-14); color:var(--c-muted); margin-top:var(--s-3); line-height:1.5;">— Mission, looking toward Twin Peaks. The fog admits exactly one streetlight at a time.</figcaption>
+      </figure>
+
+      <figure style="margin: var(--s-12) 0;">
+        <div class="tile img-4" style="aspect-ratio: 3/2; border-radius: 2px;"></div>
+        <figcaption style="font-family:var(--font-prose); font-style:italic; font-size:var(--t-14); color:var(--c-muted); margin-top:var(--s-3); line-height:1.5;">— Ocean Beach, 06:02. Two surfers, a dog, no horizon.</figcaption>
+      </figure>
+    </div>
+
+    <div class="note">
+      <strong>Motion plan:</strong> clip-path reveal on each figure as it scrolls in
+      (<code>inset(100% 0 0 0)</code> → <code>inset(0)</code>, 600ms ease). Click any figure → GSAP Flip captures
+      grid state, repositions to fullscreen lightbox, the rest of the page dims. Esc / click-outside reverses.
+      Reduced-motion skips the reveals, keeps the lightbox.
+    </div>
+  </div>
+
+  <!-- Contact sheet index — for browsing all photos -->
+  <div class="section-label" style="margin-top: var(--s-16);">04b — Contact sheet (browse index)</div>
+  <h2 class="section-title" style="font-size:var(--t-25);">For when you want to scan everything</h2>
+  <p class="section-desc">Linked from the photo landing as &ldquo;all photos.&rdquo; Uniform grid, no captions, hover lifts.</p>
+
+  <div class="palette-b" style="background:var(--c-bg); padding:var(--s-6); border-radius:12px; border:1px solid var(--c-line);">
+    <div class="mosaic" style="grid-template-columns: repeat(5, 1fr); grid-auto-rows: 140px; background: transparent; padding: 0; border: none;">
+      <div class="tile t-1x1 img-1"></div>
+      <div class="tile t-1x1 img-2"></div>
+      <div class="tile t-1x1 img-3"></div>
+      <div class="tile t-1x1 img-4"></div>
+      <div class="tile t-1x1 img-5"></div>
+      <div class="tile t-1x1 img-6"></div>
+      <div class="tile t-1x1 img-7"></div>
+      <div class="tile t-1x1 img-8"></div>
+      <div class="tile t-1x1 img-1"></div>
+      <div class="tile t-1x1 img-3"></div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- 5. MOTION                                                     -->
+  <!-- ============================================================ -->
+  <!-- ============================================================ -->
+  <!-- 05 — SEO + Agent discoverability (LLMO / GEO)                 -->
+  <!-- ============================================================ -->
+  <div class="section-label">05 — Search & agent discoverability</div>
+  <h2 class="section-title">Built to be cited, not just ranked</h2>
+  <p class="section-desc">
+    In 2026 the audience is split: traditional search (Google, Bing) and LLM agents (ChatGPT search, Perplexity,
+    Claude, Google AI Overviews). Bing Webmaster is non-negotiable since it powers ChatGPT. Below is the day-one
+    foundation we'll bake into the Astro scaffold — most are zero-config integrations.
+  </p>
+
+  <div class="variant palette-b acc-cyan">
+    <div class="variant-head">
+      <span class="name">Day-one checklist</span>
+      <span class="tag">ship before first post</span>
+    </div>
+
+    <div style="font-family: var(--font-prose); font-size: var(--t-16); line-height: 1.7;">
+      <p style="margin-top:0;"><strong style="color:var(--c-info); font-family:var(--font-mono); font-size:var(--t-12); letter-spacing:0.1em; text-transform:uppercase;">Foundations · classic SEO</strong></p>
+      <ol style="padding-left:1.4em; margin-top:var(--s-2);">
+        <li><code>@astrojs/sitemap</code> → auto <code>/sitemap-index.xml</code></li>
+        <li><code>robots.txt</code> referencing sitemap; explicitly allow <code>GPTBot</code>, <code>ClaudeBot</code>, <code>PerplexityBot</code>, <code>Google-Extended</code> (opt-in to citation)</li>
+        <li><code>@astrojs/rss</code> → <code>/rss.xml</code> <em>and</em> <code>/feed.json</code> (JSON Feed 1.1 — agents prefer it over XML)</li>
+        <li>Canonical <code>&lt;link rel="canonical"&gt;</code> on every page; Open Graph + Twitter <code>summary_large_image</code> defaults in base layout</li>
+        <li>Semantic HTML: one <code>&lt;h1&gt;</code>, <code>&lt;article&gt;</code> per post, <code>&lt;time datetime&gt;</code> for dates</li>
+      </ol>
+
+      <p><strong style="color:var(--c-info); font-family:var(--font-mono); font-size:var(--t-12); letter-spacing:0.1em; text-transform:uppercase;">Agent discoverability · LLMO / GEO</strong></p>
+      <ol start="6" style="padding-left:1.4em; margin-top:var(--s-2);">
+        <li><strong>JSON-LD per page</strong> — <code>BlogPosting</code> on essays, <code>Person</code> on /about, <code>WebSite</code> with <code>SearchAction</code> on root. This is what LLMs and Google AI Overviews actually parse.</li>
+        <li><strong>Serve raw markdown</strong> at predictable URLs (<code>/posts/[slug].md</code>) — Anthropic and Astro docs do this; highest-ROI move for agent fetchability.</li>
+        <li><code>/llms.txt</code> generated from the content collection (cheap; ~10% adoption, no major crawler confirms reading it, but trivial — ship and forget)</li>
+        <li><strong>Bing Webmaster Tools</strong> + <strong>Google Search Console</strong> — submit sitemap day one. Bing is the gateway to ChatGPT search citations.</li>
+        <li><strong>IndexNow</strong> ping on publish (Bing/Yandex; trivial Astro integration)</li>
+      </ol>
+
+      <p><strong style="color:var(--c-info); font-family:var(--font-mono); font-size:var(--t-12); letter-spacing:0.1em; text-transform:uppercase;">Content patterns that get cited</strong></p>
+      <ul style="padding-left:1.4em; margin-top:var(--s-2);">
+        <li>TL;DR / summary at the top of every essay</li>
+        <li>Declarative claims with dates and named sources</li>
+        <li>Glossary-style definitions for terms (cortical memory, etc.)</li>
+        <li>Consistent author entity across pages — same Person schema, same bio, same canonical name</li>
+        <li>Recency: LLMs favor freshest version. Frequency &gt; ranking — only ~30% of brands persist between consecutive AI answers.</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <strong>One-stop tool:</strong> <code>@jdevalk/astro-seo-graph</code> auto-generates JSON-LD graph + llms.txt
+      + IndexNow pings in a single integration. Worth evaluating before hand-rolling.
+    </div>
+  </div>
+
+  <div class="section-label">06 — Motion</div>
+  <h2 class="section-title">Restraint where it counts (06)</h2>
+  <p class="section-desc">
+    Per your call: <strong>no animation on text content</strong>. Reserve GSAP for: home page entrance,
+    photography interactions, section transitions, and one signature moment per landing page.
+    Tokens: ease <code>cubic-bezier(.2,.6,.2,1)</code>, durations 220ms (UI) / 600ms (reveal) / 1200ms (signature).
+    Reduced-motion always honored.
+  </p>
+
+
+</div>
+
+</body>
+</html>

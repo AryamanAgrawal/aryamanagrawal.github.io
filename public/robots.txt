@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Explicitly allow major AI crawlers (opt-in to citation in AI search).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://aryamanagrawal.github.io/sitemap-index.xml
