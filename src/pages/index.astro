@@ -18,18 +18,20 @@ const fmtDate = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', yea
       <div class="body">
         <p class="kicker">Aryaman Agrawal · San Francisco</p>
         <h1 class="ident">
-          Writing about <em>memory</em>, agents, and the things in between.
+          Writing on minds, machines, and <em>philosophy</em>. Making the art that emerges between.
         </h1>
         <p class="lede">
-          Engineer at Falconer. Previously: Android, simulations, a black hole that mostly worked.
+          Engineer at Falconer. Previously AI at Ironclad, philosophy and CS at UMass, programming for fun before all that.
         </p>
       </div>
     </div>
 
     {/* NOW  */}
     <div class="row now">
-      <div class="meta"><span class="pulse" aria-hidden="true"></span> Now</div>
-      <div class="body italic">teaching agents to forget. listening to Ravel. unsure about most of it.</div>
+      <div class="meta">
+        <span class="now-label"><span class="pulse" aria-hidden="true"></span>Now</span>
+      </div>
+      <div class="body italic">teaching agents to learn and forget. listening to Hozier. ai-thinking my way through most of it.</div>
     </div>
 
     <hr />
@@ -107,20 +109,25 @@ const fmtDate = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', yea
   }
   .lede {
     font-family: var(--font-prose);
-    font-size: var(--t-16);
+    font-size: var(--t-14);
     color: var(--c-text);
     opacity: 0.7;
-    line-height: 1.6;
+    line-height: 1.55;
     margin-top: var(--s-6);
+    text-wrap: balance;
+  }
+  .now-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .pulse {
     display: inline-block;
     width: 6px; height: 6px;
     border-radius: 999px;
     background: var(--c-accent);
-    vertical-align: middle;
-    margin-right: 6px;
-    transform: translateY(-1px);
+    flex-shrink: 0;
   }
+  .now .meta, .now .body { align-self: center; padding-top: 0; }
   .now .body { font-size: var(--t-16); color: var(--c-text); opacity: 0.92; line-height: 1.5; }
 </style>
