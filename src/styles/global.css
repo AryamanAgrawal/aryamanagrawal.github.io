@@ -79,7 +79,10 @@ html, body, a, .item-row, .item-title, .item-summary,
   margin: 0;
 }
 
-/* META — right-aligned mono in the gutter */
+/* META — right-aligned mono in the gutter.
+   No padding/margin: we use `align-self: start` on row children so the meta
+   and the body's first line share the same top edge. Pages that need a nudge
+   (e.g. .sec-head) override below. */
 .meta {
   font-family: var(--font-mono);
   font-size: var(--t-12);
@@ -87,9 +90,18 @@ html, body, a, .item-row, .item-title, .item-summary,
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-align: right;
-  padding-top: 6px;
   line-height: 1.4;
+  margin: 0;
+  padding: 0;
 }
+
+.row > .meta, .row > .body { align-self: start; }
+
+/* Item rows (essays, poems, etc.) and section headers use baseline alignment
+   so the gutter mono sits on the same baseline as the body's first line of
+   text, regardless of the body font's larger line-height. */
+.row.item > .meta, .row.item > .body,
+.row.sec-head > .meta, .row.sec-head > .body { align-self: baseline; }
 
 .body { min-width: 0; }
 .italic { font-family: var(--font-prose); font-style: italic; }
@@ -109,11 +121,11 @@ html, body, a, .item-row, .item-title, .item-summary,
   color: var(--c-muted);
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  line-height: 1.4;
   margin: 0 0 var(--s-6);
 }
 .kicker a { color: var(--c-accent); }
 
-.sec-head .meta { padding-top: 12px; }
 .sec-name {
   font-family: var(--font-display);
   font-weight: 700;
