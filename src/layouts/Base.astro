@@ -75,6 +75,11 @@ const schema = jsonLd ?? defaultJsonLd;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#0c0d10" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4eedf" media="(prefers-color-scheme: light)" />
+
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
