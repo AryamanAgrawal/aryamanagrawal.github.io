@@ -23,15 +23,16 @@ const num = id ?? Math.random().toString(36).slice(2, 6);
 <span class="sidenote" id={`sn-${num}`} role="note"><slot /></span>
 
 <style>
-  /* Marker: numbered superscript [N] — mono, info color, hover-affordance.
-     Counter increments here; the matching gutter note reads the same value. */
+  /* Marker: numbered superscript [N] — mono, info color.
+     Counter increments here; the matching gutter note reads the same value.
+     No cursor: help — the gutter note is already visible, so there's
+     nothing for hover to reveal. */
   .sidenote-mark {
     counter-increment: sidenote;
     font-family: var(--font-mono);
     font-size: 0.65em;
     color: var(--c-info, var(--c-accent));
     margin-left: 1px;
-    cursor: help;
   }
   .sidenote-mark::before {
     content: "[" counter(sidenote) "]";
