@@ -1,7 +1,14 @@
 ---
 /**
- * Tufte-style sidenote. Renders in the gutter column on desktop,
- * collapses to an inline footnote on narrow viewports.
+ * Tufte-style sidenote with numbered references — matches design-sheet §07
+ * (Mode B: gutter-mounted marginalia, mono [N] markers, Tufte register).
+ *
+ * Renders as a `[N]` superscript at the anchor point, with a matching
+ * `[N]`-prefixed annotation in the gutter column. Numbering is automatic
+ * via CSS counters reset on `.prose` (see global.css).
+ *
+ * On desktop, the note floats into the left gutter; on narrow viewports
+ * it collapses to an inline footnote-style aside.
  *
  * Usage in MDX:
  *   Some prose <Sidenote>The annotation.</Sidenote> continuing.
@@ -12,23 +19,25 @@ interface Props {
 const { id } = Astro.props;
 const num = id ?? Math.random().toString(36).slice(2, 6);
 ---
-<span class="sidenote-mark" aria-describedby={`sn-${num}`}>&nbsp;</span>
+<sup class="sidenote-mark" aria-describedby={`sn-${num}`}></sup>
 <span class="sidenote" id={`sn-${num}`} role="note"><slot /></span>
 
 <style>
-  /* Mark: a small cyan dot in the body column where the note is anchored. */
+  /* Marker: numbered superscript [N] — mono, info color, hover-affordance.
+     Counter increments here; the matching gutter note reads the same value. */
   .sidenote-mark {
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    border-radius: 999px;
-    background: var(--c-accent);
-    vertical-align: super;
-    margin-left: 2px;
+    counter-increment: sidenote;
+    font-family: var(--font-mono);
+    font-size: 0.65em;
+    color: var(--c-info, var(--c-accent));
+    margin-left: 1px;
+    cursor: help;
+  }
+  .sidenote-mark::before {
+    content: "[" counter(sidenote) "]";
   }
 
-  /* Desktop: float the note into the gutter. The .page grid's left
-     gutter sits before the body column, so negative margin pulls it there. */
+  /* Gutter note: italic prose, [N] prefix in mono normal-style. */
   .sidenote {
     display: block;
     float: left;
@@ -43,8 +52,16 @@ const num = id ?? Math.random().toString(36).slice(2, 6);
     color: var(--c-muted);
     text-align: right;
   }
+  .sidenote::before {
+    content: "[" counter(sidenote) "] ";
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.9em;
+    color: var(--c-info, var(--c-accent));
+    margin-right: 4px;
+  }
 
-  /* Mobile: collapse to an inline footnote-style aside. */
+  /* Mobile: collapse to inline footnote-style aside. */
   @media (max-width: 720px) {
     .sidenote {
       float: none;
