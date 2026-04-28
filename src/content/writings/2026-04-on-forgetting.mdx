@@ -1,0 +1,154 @@
+---
+title: On forgetting
+date: 2026-04-27
+summary: Memory's hard problem isn't adding things or retrieving them. It's choosing what stops mattering — and that work only becomes load-bearing where individuals can't reach. A short thesis on why the second brain was always a single-player product, and what happens when memory finally has a substrate worth forgetting on.
+tags: [memory, agents, organizations, brief]
+---
+
+import Sidenote from '@/components/Sidenote.astro';
+
+Companies need a world model. Jack Dorsey called it that — a machine-readable substrate that holds decisions, discussions, and code as something more than an archive, replacing the slow human work of routing context through hierarchy. He's pointing at the right primitive.
+
+But every "AI second brain" being shipped is single-player. Obsidian + Claude. Mem0. Letta. Supermemory. They all benchmark on retrieval, treating memory as storage with smarter lookup. None of them touch the part of memory that actually matters.
+
+Memory's hard problem isn't adding things. It isn't even retrieving them. It's choosing what stops mattering — and that work only becomes load-bearing where individuals can't reach.
+
+The cog-sci literature has been clear on this for fifty years. Bjork's storage-vs-retrieval-strength model gave us the language: storage persists, retrieval decays, and decay is what keeps the path clear.<Sidenote>Bjork & Bjork's "new theory of disuse" (1992): storage strength only grows; retrieval strength fluctuates. Forgetting *is* the path to relearning.</Sidenote> Nader's reconsolidation work showed that every retrieval is a potential write. Complementary-learning-systems theory explains why: without supersession, contradictory beliefs accumulate; without schema formation, every episode stays equally weighted. A 2026 ACM Computing Surveys piece on selective forgetting calls it "adaptive, not a defect." Yet every shipping memory product treats forgetting as data loss.
+
+The reason is that forgetting needs a substrate. It only becomes load-bearing where three things appear together:
+
+- **Recurrence** — the same patterns showing up across many sessions, so the system has signal to extract
+- **Contradiction** — newer beliefs that supersede older ones, so supersession has work to do
+- **Schemas** — abstractions worth keeping, so consolidation has a target
+
+Individuals don't generate enough of any of these. Personal note-taking optimizes for organization, not learning. The Forte / Obsidian framing was always selling structure. There's nothing wrong with that. It's a different product.
+
+Organizations generate all three natively. Decisions get revisited. Beliefs get revised. Patterns repeat across teams. Slack threads, code review cycles, design docs — every artifact a company produces is already shaped by recurrence and contradiction. The substrate has been there the whole time.
+
+<figure class="quadrant-figure" role="figure" aria-label="Quadrant chart: where forgetting becomes load-bearing across the recurrence and contradiction-density axes">
+  <svg viewBox="0 0 600 620" xmlns="http://www.w3.org/2000/svg" class="quadrant-svg">
+    {/* Title */}
+    <text x="300" y="24" text-anchor="middle" class="q-title">Where forgetting becomes load-bearing</text>
+
+    {/* Plot frame */}
+    <rect x="60" y="60" width="480" height="480" class="q-frame" />
+
+    {/* Quadrant dividers */}
+    <line x1="300" y1="60" x2="300" y2="540" class="q-divider" />
+    <line x1="60" y1="300" x2="540" y2="300" class="q-divider" />
+
+    {/* Axes labels */}
+    <text x="300" y="580" text-anchor="middle" class="q-axis-label">Recurrence →</text>
+    <text x="36" y="300" text-anchor="middle" transform="rotate(-90, 36, 300)" class="q-axis-label">Contradiction density →</text>
+
+    {/* Quadrant captions */}
+    <text x="420" y="80" text-anchor="middle" class="q-quadrant-label">org memory works</text>
+    <text x="180" y="80" text-anchor="middle" class="q-quadrant-label">one-off debates</text>
+    <text x="180" y="528" text-anchor="middle" class="q-quadrant-label">notes &amp; lookup</text>
+    <text x="420" y="528" text-anchor="middle" class="q-quadrant-label">routine workflows</text>
+
+    {/* Data points */}
+    <g class="q-points">
+      <circle cx="156" cy="468" r="3.5" class="q-point" />
+      <text x="164" y="472" class="q-point-label">Obsidian / Notion AI</text>
+
+      <circle cx="252" cy="420" r="3.5" class="q-point" />
+      <text x="260" y="424" class="q-point-label">Mem0 / Letta</text>
+
+      <circle cx="276" cy="372" r="3.5" class="q-point" />
+      <text x="284" y="376" class="q-point-label">Supermemory</text>
+
+      <circle cx="444" cy="204" r="3.5" class="q-point" />
+      <text x="436" y="208" text-anchor="end" class="q-point-label">Slack history</text>
+
+      <circle cx="468" cy="132" r="3.5" class="q-point" />
+      <text x="460" y="136" text-anchor="end" class="q-point-label">GitHub review</text>
+
+      <circle cx="502" cy="98" r="5" class="q-point-accent" />
+      <text x="494" y="102" text-anchor="end" class="q-point-label-accent">Falconer</text>
+    </g>
+  </svg>
+  <figcaption class="q-caption">The substrate the second-brain pitch always needed has been sitting in plain sight.</figcaption>
+</figure>
+
+<style>{`
+  .quadrant-figure {
+    margin: var(--s-8, 2rem) 0;
+    text-align: center;
+  }
+  .quadrant-svg {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    display: inline-block;
+  }
+  .q-title {
+    font-family: var(--font-display, system-ui);
+    font-weight: 600;
+    font-size: 14px;
+    fill: var(--c-text, currentColor);
+    letter-spacing: 0.02em;
+  }
+  .q-frame {
+    fill: none;
+    stroke: var(--c-line, currentColor);
+    stroke-opacity: 0.25;
+    stroke-width: 1;
+  }
+  .q-divider {
+    stroke: var(--c-line, currentColor);
+    stroke-opacity: 0.18;
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+  }
+  .q-axis-label {
+    font-family: var(--font-prose, system-ui);
+    font-size: 11px;
+    font-style: italic;
+    fill: var(--c-muted, currentColor);
+    fill-opacity: 0.85;
+    letter-spacing: 0.04em;
+  }
+  .q-quadrant-label {
+    font-family: var(--font-prose, system-ui);
+    font-size: 10px;
+    font-variant: small-caps;
+    fill: var(--c-muted, currentColor);
+    fill-opacity: 0.7;
+    letter-spacing: 0.08em;
+  }
+  .q-point {
+    fill: var(--c-text, currentColor);
+    fill-opacity: 0.7;
+  }
+  .q-point-accent {
+    fill: var(--c-accent, #00b4d8);
+  }
+  .q-point-label {
+    font-family: var(--font-prose, system-ui);
+    font-size: 11px;
+    fill: var(--c-text, currentColor);
+    fill-opacity: 0.9;
+  }
+  .q-point-label-accent {
+    font-family: var(--font-prose, system-ui);
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--c-accent, #00b4d8);
+    letter-spacing: 0.01em;
+  }
+  .q-caption {
+    font-family: var(--font-prose, system-ui);
+    font-style: italic;
+    font-size: var(--t-12, 0.8rem);
+    color: var(--c-muted, currentColor);
+    margin-top: var(--s-2, 0.5rem);
+    line-height: 1.5;
+  }
+`}</style>
+
+This is the move [Dorsey](https://block.xyz/inside/from-hierarchy-to-intelligence) was pointing at. The company world model isn't a copilot layered on top of hierarchy — it's the substrate that replaces what hierarchy used to do. Humans at the edge, where reality breaks the model. Closer to right than the rest of the field.
+
+This is what we're building at Falconer. Org-scale memory where forgetting is the load-bearing primitive — supersession, schema formation, decay as a feature, not an accident.
+
+The bigger piece on forgetting-as-the-key-to-learning is coming. Short version: if your second brain can only add, it isn't one.
