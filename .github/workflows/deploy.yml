@@ -29,6 +29,10 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      # astro-d2 shells out to the d2 CLI at build time. Install before pnpm build.
+      - name: Install D2
+        run: curl -fsSL https://d2lang.com/install.sh | sh -s --
+
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
