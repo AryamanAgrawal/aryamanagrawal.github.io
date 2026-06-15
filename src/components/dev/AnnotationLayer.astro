@@ -1,0 +1,355 @@
+---
+// Dev-only annotation overlay. Select text on any page, leave a comment and/or
+// a suggested replacement; it persists to annotations.json (via the dev-only
+// /__annotate middleware in astro.config.mjs) for Claude to read and act on.
+//
+// Everything lives inside an `if (import.meta.env.DEV)` guard so Vite strips the
+// entire body (styles are injected from JS too) out of the production build.
+---
+
+<script>
+  if (import.meta.env.DEV) {
+    const css = `
+      mark.annot { background: color-mix(in oklab, var(--c-accent) 20%, transparent); border-bottom: 1.5px dashed var(--c-accent); border-radius: 2px; color: inherit; cursor: pointer; padding: 0 1px; }
+      .annot-ui { position: fixed; z-index: 9999; font-family: var(--font-mono); }
+      .annot-btn { font-size: 12px; padding: 5px 9px; background: var(--c-accent); color: #04050a; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+      .annot-card, .annot-pop { width: 320px; background: var(--c-surface); border: 1px solid var(--c-line); border-radius: 8px; padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.45); display: flex; flex-direction: column; gap: 8px; }
+      .annot-quote { font-size: 11px; color: var(--c-muted); font-style: italic; line-height: 1.4; max-height: 48px; overflow: hidden; }
+      .annot-input { width: 100%; box-sizing: border-box; background: var(--c-bg); color: var(--c-text); border: 1px solid var(--c-line); border-radius: 4px; padding: 6px 8px; font-family: var(--font-mono); font-size: 12px; line-height: 1.4; resize: vertical; }
+      .annot-input--sugg { color: var(--c-accent-2); }
+      .annot-input:focus { outline: none; border-color: var(--c-accent); }
+      .annot-row { display: flex; justify-content: flex-end; gap: 6px; }
+      .annot-mini { font-family: var(--font-mono); font-size: 11px; padding: 4px 10px; background: transparent; color: var(--c-muted); border: 1px solid var(--c-line); border-radius: 4px; cursor: pointer; }
+      .annot-mini--primary { background: var(--c-accent); color: #04050a; border-color: var(--c-accent); }
+      .annot-pop-comment { font-family: var(--font-prose); font-size: 14px; color: var(--c-text); line-height: 1.45; }
+      .annot-pop-sugg { font-size: 12px; color: var(--c-accent-2); background: var(--c-bg); border: 1px solid var(--c-line); border-radius: 4px; padding: 6px 8px; line-height: 1.4; }
+      .annot-pop-label { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--c-muted); margin-bottom: 3px; }
+      .annot-badge { bottom: 16px; left: 16px; font-size: 11px; padding: 5px 10px; border-radius: 999px; background: var(--c-surface); border: 1px solid var(--c-line); color: var(--c-muted); opacity: .6; pointer-events: none; }
+      .annot-badge[data-has='1'] { color: var(--c-accent); border-color: color-mix(in oklab, var(--c-accent) 40%, var(--c-line)); opacity: 1; }
+      @media (max-width: 720px) { .annot-badge { display: none; } }
+    `
+    const styleEl = document.createElement('style')
+    styleEl.textContent = css
+    document.head.appendChild(styleEl)
+
+    const API = '/__annotate'
+    const state = { open: [], resolved: [] }
+    let floatBtn = null
+    let composer = null
+    let popover = null
+    let pendingRange = null
+    let badge = null
+
+    const main = () => document.querySelector('main') || document.body
+    const elt = (tag, cls, text) => {
+      const e = document.createElement(tag)
+      if (cls) e.className = cls
+      if (text != null) e.textContent = text
+      return e
+    }
+
+    function textNodes(root) {
+      const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(n) {
+          if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT
+          if (n.parentElement && n.parentElement.closest('.annot-ui')) return NodeFilter.FILTER_REJECT
+          return NodeFilter.FILTER_ACCEPT
+        },
+      })
+      const out = []
+      let n
+      while ((n = w.nextNode())) out.push(n)
+      return out
+    }
+
+    function locate(target, before, after) {
+      if (!target) return null
+      const nodes = textNodes(main())
+      let full = ''
+      const map = []
+      for (const node of nodes) {
+        map.push({ node, start: full.length })
+        full += node.nodeValue
+      }
+      const key = (before || '') + target + (after || '')
+      let startG = key ? full.indexOf(key) : -1
+      if (startG >= 0) startG += (before || '').length
+      else {
+        startG = full.indexOf(target)
+        if (startG < 0) return null
+      }
+      const endG = startG + target.length
+      const find = (g) => {
+        for (let i = map.length - 1; i >= 0; i--) {
+          if (g >= map[i].start) return { node: map[i].node, offset: g - map[i].start }
+        }
+        return null
+      }
+      const s = find(startG)
+      const e = find(endG)
+      if (!s || !e) return null
+      const r = document.createRange()
+      try {
+        r.setStart(s.node, s.offset)
+        r.setEnd(e.node, e.offset)
+      } catch {
+        return null
+      }
+      return r
+    }
+
+    function wrap(range, id) {
+      try {
+        const m = elt('mark', 'annot')
+        m.dataset.annotId = id
+        m.appendChild(range.extractContents())
+        range.insertNode(m)
+        return m
+      } catch {
+        return null
+      }
+    }
+    function unwrap(m) {
+      const p = m.parentNode
+      if (!p) return
+      while (m.firstChild) p.insertBefore(m.firstChild, m)
+      p.removeChild(m)
+      p.normalize()
+    }
+
+    function clearHighlights() {
+      document.querySelectorAll('mark.annot').forEach(unwrap)
+    }
+    function renderHighlights() {
+      clearHighlights()
+      const here = location.pathname
+      for (const a of state.open) {
+        if (a.url && a.url !== here) continue
+        const r = locate(a.text, a.before, a.after)
+        if (r) wrap(r, a.id)
+      }
+    }
+
+    async function loadState() {
+      try {
+        const res = await fetch(API)
+        const data = await res.json()
+        state.open = data.open || []
+        state.resolved = data.resolved || []
+      } catch {
+        state.open = []
+      }
+      renderHighlights()
+      updateBadge()
+    }
+
+    function updateBadge() {
+      const n = state.open.filter((a) => !a.url || a.url === location.pathname).length
+      if (!badge) {
+        badge = elt('div', 'annot-ui annot-badge')
+        document.body.appendChild(badge)
+      }
+      badge.textContent = n ? `✎ ${n} note${n === 1 ? '' : 's'}` : '✎ edit mode'
+      badge.dataset.has = n ? '1' : '0'
+    }
+
+    function removeFloat() {
+      if (floatBtn) floatBtn.remove()
+      floatBtn = null
+    }
+    function removeComposer() {
+      if (composer) composer.remove()
+      composer = null
+      pendingRange = null
+    }
+    function removePopover() {
+      if (popover) popover.remove()
+      popover = null
+    }
+
+    function onMouseUp(e) {
+      if (e.target.closest && e.target.closest('.annot-ui')) return
+      setTimeout(() => {
+        const sel = window.getSelection()
+        if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+          removeFloat()
+          return
+        }
+        const range = sel.getRangeAt(0)
+        if (!main().contains(range.commonAncestorContainer)) {
+          removeFloat()
+          return
+        }
+        showCommentButton(range)
+      }, 10)
+    }
+
+    function showCommentButton(range) {
+      removeFloat()
+      removeComposer()
+      pendingRange = range.cloneRange()
+      const rect = range.getBoundingClientRect()
+      floatBtn = elt('button', 'annot-ui annot-btn', '\u{1F4AC} Comment')
+      floatBtn.style.top = rect.bottom + 8 + 'px'
+      floatBtn.style.left = Math.max(8, rect.left) + 'px'
+      floatBtn.addEventListener('mousedown', (e) => e.preventDefault())
+      floatBtn.addEventListener('click', openComposer)
+      document.body.appendChild(floatBtn)
+    }
+
+    function snippet(r, n) {
+      return r.toString().length > n ? r.toString().slice(0, n) + '…' : r.toString()
+    }
+
+    function openComposer() {
+      if (!pendingRange) return
+      removeFloat()
+      const r = pendingRange
+      const rect = r.getBoundingClientRect()
+      composer = elt('div', 'annot-ui annot-card')
+      composer.style.top = Math.min(window.innerHeight - 280, rect.bottom + 8) + 'px'
+      composer.style.left = Math.max(8, Math.min(window.innerWidth - 340, rect.left)) + 'px'
+
+      const quote = elt('div', 'annot-quote', '“' + snippet(r, 140) + '”')
+      const note = elt('textarea', 'annot-input')
+      note.placeholder = 'Comment… (what should change?)'
+      note.rows = 2
+      const sugg = elt('textarea', 'annot-input annot-input--sugg')
+      sugg.placeholder = 'Suggested replacement (optional)'
+      sugg.rows = 2
+      const row = elt('div', 'annot-row')
+      const cancel = elt('button', 'annot-mini', 'Cancel')
+      const save = elt('button', 'annot-mini annot-mini--primary', 'Save')
+      cancel.addEventListener('click', () => {
+        removeComposer()
+        window.getSelection()?.removeAllRanges()
+      })
+      save.addEventListener('click', () => submit(note.value, sugg.value))
+      note.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') submit(note.value, sugg.value)
+      })
+      row.append(cancel, save)
+      composer.append(quote, note, sugg, row)
+      document.body.appendChild(composer)
+      note.focus()
+    }
+
+    function ctx() {
+      const r = pendingRange
+      const sc = r.startContainer
+      const ec = r.endContainer
+      const before = sc.nodeType === 3 ? sc.nodeValue.slice(Math.max(0, r.startOffset - 40), r.startOffset) : ''
+      const after = ec.nodeType === 3 ? ec.nodeValue.slice(r.endOffset, r.endOffset + 40) : ''
+      let node = sc.nodeType === 3 ? sc.parentElement : sc
+      const srcEl = node && node.closest ? node.closest('[data-astro-source-file]') : null
+      return {
+        before,
+        after,
+        sourceFile: srcEl ? srcEl.getAttribute('data-astro-source-file') : null,
+        sourceLoc: srcEl ? srcEl.getAttribute('data-astro-source-loc') : null,
+      }
+    }
+
+    async function submit(comment, suggestion) {
+      if (!pendingRange || (!comment.trim() && !suggestion.trim())) {
+        removeComposer()
+        return
+      }
+      const c = ctx()
+      const payload = {
+        url: location.pathname,
+        title: document.title,
+        text: pendingRange.toString(),
+        before: c.before,
+        after: c.after,
+        sourceFile: c.sourceFile,
+        sourceLoc: c.sourceLoc,
+        comment: comment.trim(),
+        suggestion: suggestion.trim() || null,
+      }
+      let ann = null
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        ann = await res.json()
+      } catch {}
+      if (ann && ann.id) {
+        wrap(pendingRange, ann.id)
+        state.open.push(ann)
+        updateBadge()
+      }
+      removeComposer()
+      window.getSelection()?.removeAllRanges()
+    }
+
+    function openPopover(mark) {
+      removePopover()
+      const a = state.open.find((x) => x.id === mark.dataset.annotId)
+      if (!a) return
+      const rect = mark.getBoundingClientRect()
+      popover = elt('div', 'annot-ui annot-pop')
+      popover.style.top = Math.min(window.innerHeight - 200, rect.bottom + 8) + 'px'
+      popover.style.left = Math.max(8, Math.min(window.innerWidth - 320, rect.left)) + 'px'
+
+      if (a.comment) popover.append(elt('div', 'annot-pop-comment', a.comment))
+      if (a.suggestion) {
+        const s = elt('div', 'annot-pop-sugg')
+        s.append(elt('span', 'annot-pop-label', 'suggested'))
+        s.append(elt('div', null, a.suggestion))
+        popover.append(s)
+      }
+      const row = elt('div', 'annot-row')
+      const del = elt('button', 'annot-mini', 'Delete')
+      const done = elt('button', 'annot-mini annot-mini--primary', 'Resolve')
+      del.addEventListener('click', () => removeAnnotation(a, mark, 'delete'))
+      done.addEventListener('click', () => removeAnnotation(a, mark, 'resolve'))
+      row.append(del, done)
+      popover.append(row)
+      document.body.appendChild(popover)
+    }
+
+    async function removeAnnotation(a, mark, kind) {
+      try {
+        if (kind === 'resolve') {
+          await fetch(API, {
+            method: 'PATCH',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ id: a.id, action: 'resolve' }),
+          })
+        } else {
+          await fetch(`${API}?id=${encodeURIComponent(a.id)}`, { method: 'DELETE' })
+        }
+      } catch {}
+      state.open = state.open.filter((x) => x.id !== a.id)
+      if (mark) unwrap(mark)
+      removePopover()
+      updateBadge()
+    }
+
+    document.addEventListener('mouseup', onMouseUp)
+    document.addEventListener('mousedown', (e) => {
+      const t = e.target
+      if (t.closest && t.closest('.annot-ui')) return
+      if (t.closest && t.closest('mark.annot')) return
+      removeFloat()
+      if (composer && !t.closest('.annot-card')) removeComposer()
+      if (popover) removePopover()
+    })
+    document.addEventListener('click', (e) => {
+      const m = e.target.closest ? e.target.closest('mark.annot') : null
+      if (m) openPopover(m)
+    })
+
+    document.addEventListener('astro:page-load', loadState)
+    if (document.readyState !== 'loading') loadState()
+    else document.addEventListener('DOMContentLoaded', loadState)
+    document.addEventListener('astro:before-swap', () => {
+      removeFloat()
+      removeComposer()
+      removePopover()
+    })
+  }
+</script>

@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import ThemeToggle from '@/components/ThemeToggle.astro';
+import AnnotationLayer from '@/components/dev/AnnotationLayer.astro';
 
 interface Props {
   title: string;
@@ -115,5 +116,6 @@ const schema = jsonLd ?? defaultJsonLd;
   <body>
     <slot />
     <ThemeToggle />
+    {import.meta.env.DEV && <AnnotationLayer />}
   </body>
 </html>

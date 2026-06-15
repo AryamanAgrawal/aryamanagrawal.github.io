@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# local dev annotations (Claude editing mode)
+annotations.json
+
 # macOS-specific files
 .DS_Store
 
