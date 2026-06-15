@@ -4,8 +4,9 @@
 // the figure follows the [data-theme] toggle automatically.
 interface Props {
   variant?: 'current' | 'lensing' | 'grain' | 'minimal' | 'dramatic' | 'layered' | 'minimal-grain';
+  layout?: 'outside' | 'zoom';
 }
-const { variant = 'current' } = Astro.props;
+const { variant = 'current', layout = 'outside' } = Astro.props;
 const layered = variant === 'layered';
 const minimalLayout = variant === 'minimal' || variant === 'minimal-grain';
 const showHtmlDisk = variant === 'current' || variant === 'grain' || variant === 'dramatic' || layered;
@@ -121,24 +122,48 @@ const showParticles = true;
     <circle cx="218" cy="198" r="5" class="ol-node"></circle>
     <text x="202" y="196" text-anchor="end" class="ol-label">distill</text>
 
-    <line x1="600" y1="128" x2="548" y2="190" class="ol-tether"></line>
-    <text x="612" y="150" text-anchor="start" class="ol-tetherLabel">grounds in</text>
+    {
+      layout === 'outside' && (
+        <>
+          <line x1="600" y1="128" x2="548" y2="190" class="ol-tether" />
+          <text x="612" y="150" text-anchor="start" class="ol-tetherLabel">grounds in</text>
+          <circle cx="628" cy="96" r="40" class="ol-ring ol-ring--inner" />
+          <circle r="3.5" class="ol-pulse ol-pulse--inner">
+            <animateMotion dur="4.5s" repeatCount="indefinite" rotate="auto" path="M628,56 A40,40 0 1,1 627.9,56" />
+          </circle>
+          <circle cx="628" cy="56" r="4" class="ol-node ol-node--inner" />
+          <text x="628" y="44" text-anchor="middle" class="ol-label ol-label--inner">run</text>
+          <circle cx="662.6" cy="116" r="4" class="ol-node ol-node--inner" />
+          <text x="676" y="120" text-anchor="start" class="ol-label ol-label--inner">check</text>
+          <circle cx="593.4" cy="116" r="4" class="ol-node ol-node--inner" />
+          <text x="580" y="120" text-anchor="end" class="ol-label ol-label--inner">adjust</text>
+          <text x="628" y="-14" text-anchor="middle" class="ol-title">Inner loop</text>
+          <text x="628" y="2" text-anchor="middle" class="ol-sub">one agent, one session</text>
+        </>
+      )
+    }
 
-    <circle cx="628" cy="96" r="40" class="ol-ring ol-ring--inner"></circle>
-    <circle r="3.5" class="ol-pulse ol-pulse--inner">
-      <animateMotion dur="4.5s" repeatCount="indefinite" rotate="auto">
-        <mpath href="#ol-innerPath"></mpath>
-      </animateMotion>
-    </circle>
-    <circle cx="628" cy="56" r="4" class="ol-node ol-node--inner"></circle>
-    <text x="628" y="44" text-anchor="middle" class="ol-label ol-label--inner">run</text>
-    <circle cx="662.6" cy="116" r="4" class="ol-node ol-node--inner"></circle>
-    <text x="676" y="120" text-anchor="start" class="ol-label ol-label--inner">check</text>
-    <circle cx="593.4" cy="116" r="4" class="ol-node ol-node--inner"></circle>
-    <text x="580" y="120" text-anchor="end" class="ol-label ol-label--inner">adjust</text>
-
-    <text x="628" y="-14" text-anchor="middle" class="ol-title">Inner loop</text>
-    <text x="628" y="2" text-anchor="middle" class="ol-sub">one agent, one session</text>
+    {
+      layout === 'zoom' && (
+        <>
+          <circle cx="542" cy="198" r="9" class="ol-zoom-src" />
+          <line x1="548.9" y1="203.8" x2="658.6" y2="121.8" class="ol-zoom-line" />
+          <line x1="535.1" y1="192.2" x2="597.4" y2="70.2" class="ol-zoom-line" />
+          <circle cx="628" cy="96" r="40" class="ol-ring ol-ring--inner" />
+          <circle r="3.5" class="ol-pulse ol-pulse--inner">
+            <animateMotion dur="4.5s" repeatCount="indefinite" rotate="auto" path="M628,56 A40,40 0 1,1 627.9,56" />
+          </circle>
+          <circle cx="628" cy="56" r="4" class="ol-node ol-node--inner" />
+          <text x="628" y="44" text-anchor="middle" class="ol-label ol-label--inner">run</text>
+          <circle cx="662.6" cy="116" r="4" class="ol-node ol-node--inner" />
+          <text x="676" y="120" text-anchor="start" class="ol-label ol-label--inner">check</text>
+          <circle cx="593.4" cy="116" r="4" class="ol-node ol-node--inner" />
+          <text x="580" y="120" text-anchor="end" class="ol-label ol-label--inner">adjust</text>
+          <text x="628" y="-14" text-anchor="middle" class="ol-title">Inner loop</text>
+          <text x="628" y="2" text-anchor="middle" class="ol-sub">one step, up close</text>
+        </>
+      )
+    }
 
     <text x="380" y="470" text-anchor="middle" class="ol-title">Outer loop</text>
     <text x="380" y="488" text-anchor="middle" class="ol-sub">the company's memory</text>
@@ -281,6 +306,18 @@ const showParticles = true;
     stroke-width: 1.2;
     stroke-dasharray: 3 4;
     opacity: 0.6;
+  }
+  .ol-zoom-src {
+    fill: none;
+    stroke: var(--c-accent);
+    stroke-width: 1.2;
+    stroke-dasharray: 2 2.5;
+    opacity: 0.75;
+  }
+  .ol-zoom-line {
+    stroke: var(--c-accent);
+    stroke-width: 1;
+    opacity: 0.4;
   }
   .ol-label {
     fill: var(--c-text);

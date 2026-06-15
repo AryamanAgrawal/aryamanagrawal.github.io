@@ -8,17 +8,16 @@ draft: false
 
 import OuterLoopDiagram from "@/components/OuterLoopDiagram.astro";
 import Sidenote from "@/components/Sidenote.astro";
-import Pullquote from "@/components/Pullquote.astro";
 
-> Context is the memory layer for a company. Dump everything into one big space, make it vector searchable, and that solves the problem.
-
-Some version of that pitch reaches me from almost everyone building in this space right now. I think it has the problem backwards.
+"Context is the memory layer for a company. Dump everything into one big space, make it vector searchable, and that solves the problem." Some version of that pitch reaches me from almost everyone building in this space right now. I think it has the problem backwards.
 
 We have always treated docs as archival instruments. You write something down once, and people read it forever. When it goes stale, the only fix anyone reaches for is a mandate: a process, a quarterly review, a person whose job is to keep the wiki honest. Humans are bad at this. They skip it, the docs rot, and the whole org pays for it without ever quite seeing the bill.<Sidenote>Jack Dorsey and Roelof Botha, [From Hierarchy to Intelligence](https://block.xyz/inside/from-hierarchy-to-intelligence) — the case that this is a vastly underrated lever.</Sidenote>
 
 It helps to look at what actually happens to a decision. Say one gets made in a meeting. The usual path is that it lands as a bullet in someone's notes, then a human has to remember to log it in Linear or Jira, then another has to turn it into real work. That is the engineer's version, and every other function has its own leaky chain. Each handoff is a place the thread can drop. And most decisions never even make it that far. They happen in a Slack thread, a DM, or someone's head, and that is where they stay.
 
-So the information is not gone, exactly. It happened. Someone knows. But it is sitting behind a horizon you can't reach. When you search, you don't get the decision back, you get the two hundred messages around it. I know companies at the absolute frontier of this field who find out the name of their next model by searching Slack. The answer is in there. Good luck pulling it out clean.
+So the information is not gone, exactly. It happened. Someone knows. It has just fallen past an event horizon. That is the strange part about a black hole: it does not destroy what falls in. When you search, you don't get the decision back, you get the two hundred messages around it. I know companies at the absolute frontier of this field who find out the name of their next model by searching Slack. The answer is in there. Good luck pulling it out clean.
+
+> The information is still there, in principle. But nothing usable ever comes back out.
 
 This is the part people underrate. Slack, Notion, the search layers stacked on top, all of them optimize for retrieval out of a pile that nobody grooms. The pile only grows. Nothing ever reconciles it.
 
@@ -30,11 +29,9 @@ I watch the human version of this constantly. A new hire reads a doc and has no 
 
 So org memory is not a side quest to the agent-loop excitement. It is the floor the whole thing stands on.
 
-<Pullquote>
-  Everyone is building inner loops on an outer loop that is already broken.
-</Pullquote>
+> Everyone is building inner loops on an outer loop that is already broken.
 
-<OuterLoopDiagram variant="minimal" />
+<OuterLoopDiagram variant="minimal" layout="zoom" />
 
 The outer loop only works if contradictions and supersessions get caught and resolved, and getting that to a hundred percent is genuinely hard. It is the problem we are chipping at. The base cases are concrete enough to picture: pull decisions straight out of Slack, where they actually get made, and deliver the answers back there too. Update a doc the moment a PR lands. Give the system access across Slack, GitHub, Linear, and meeting notes, and let it reconcile the sources and hand you the contradictions itself. The specific workflows vary wildly between orgs, but they collapse into a handful of shapes.
 
