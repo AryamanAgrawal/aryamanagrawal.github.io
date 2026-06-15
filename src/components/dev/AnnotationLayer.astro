@@ -10,22 +10,36 @@
 <script>
   if (import.meta.env.DEV) {
     const css = `
-      mark.annot { background: color-mix(in oklab, var(--c-accent) 20%, transparent); border-bottom: 1.5px dashed var(--c-accent); border-radius: 2px; color: inherit; cursor: pointer; padding: 0 1px; }
+      mark.annot { background: color-mix(in oklab, var(--c-accent) 15%, transparent); border-bottom: 1px solid color-mix(in oklab, var(--c-accent) 55%, transparent); border-radius: 1px; color: inherit; cursor: pointer; padding: 0 1px; transition: background-color 200ms var(--ease); }
+      mark.annot:hover { background: color-mix(in oklab, var(--c-accent) 26%, transparent); }
       .annot-ui { position: fixed; z-index: 9999; font-family: var(--font-mono); }
-      .annot-btn { font-size: 12px; padding: 5px 9px; background: var(--c-accent); color: #04050a; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
-      .annot-card, .annot-pop { width: 320px; background: var(--c-surface); border: 1px solid var(--c-line); border-radius: 8px; padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.45); display: flex; flex-direction: column; gap: 8px; }
-      .annot-quote { font-size: 11px; color: var(--c-muted); font-style: italic; line-height: 1.4; max-height: 48px; overflow: hidden; }
-      .annot-input { width: 100%; box-sizing: border-box; background: var(--c-bg); color: var(--c-text); border: 1px solid var(--c-line); border-radius: 4px; padding: 6px 8px; font-family: var(--font-mono); font-size: 12px; line-height: 1.4; resize: vertical; }
-      .annot-input--sugg { color: var(--c-accent-2); }
+
+      .annot-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 0.04em; padding: 6px 10px 6px 9px; background: var(--c-bg); color: var(--c-muted); border: 1px solid var(--c-line); border-radius: 6px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.28); transition: color 200ms var(--ease), border-color 200ms var(--ease); }
+      .annot-btn:hover { color: var(--c-accent); border-color: var(--c-accent); }
+      .annot-btn svg { width: 13px; height: 13px; flex: none; }
+
+      .annot-card, .annot-pop { width: 300px; background: var(--c-surface); border: 1px solid var(--c-line); border-radius: 8px; padding: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.42); display: flex; flex-direction: column; gap: 10px; }
+      .annot-head { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--c-muted); }
+      .annot-quote { font-family: var(--font-prose); font-style: italic; font-size: 12.5px; color: var(--c-muted); line-height: 1.45; border-left: 2px solid var(--c-line); padding-left: 9px; max-height: 56px; overflow: hidden; }
+
+      .annot-input { width: 100%; box-sizing: border-box; background: var(--c-bg); color: var(--c-text); border: 1px solid var(--c-line); border-radius: 2px; padding: 7px 8px; font-family: var(--font-mono); font-size: 12px; line-height: 1.45; resize: none; overflow: auto; transition: border-color 200ms var(--ease); }
+      .annot-input::placeholder { color: var(--c-muted); opacity: 0.65; }
       .annot-input:focus { outline: none; border-color: var(--c-accent); }
-      .annot-row { display: flex; justify-content: flex-end; gap: 6px; }
-      .annot-mini { font-family: var(--font-mono); font-size: 11px; padding: 4px 10px; background: transparent; color: var(--c-muted); border: 1px solid var(--c-line); border-radius: 4px; cursor: pointer; }
-      .annot-mini--primary { background: var(--c-accent); color: #04050a; border-color: var(--c-accent); }
-      .annot-pop-comment { font-family: var(--font-prose); font-size: 14px; color: var(--c-text); line-height: 1.45; }
-      .annot-pop-sugg { font-size: 12px; color: var(--c-accent-2); background: var(--c-bg); border: 1px solid var(--c-line); border-radius: 4px; padding: 6px 8px; line-height: 1.4; }
-      .annot-pop-label { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--c-muted); margin-bottom: 3px; }
-      .annot-badge { bottom: 16px; left: 16px; font-size: 11px; padding: 5px 10px; border-radius: 999px; background: var(--c-surface); border: 1px solid var(--c-line); color: var(--c-muted); opacity: .6; pointer-events: none; }
-      .annot-badge[data-has='1'] { color: var(--c-accent); border-color: color-mix(in oklab, var(--c-accent) 40%, var(--c-line)); opacity: 1; }
+      .annot-input--sugg { color: var(--c-accent-2); }
+
+      .annot-row { display: flex; justify-content: flex-end; gap: 6px; align-items: center; }
+      .annot-mini { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; padding: 5px 11px; background: transparent; color: var(--c-muted); border: 1px solid var(--c-line); border-radius: 4px; cursor: pointer; transition: color 200ms var(--ease), border-color 200ms var(--ease), background-color 200ms var(--ease); }
+      .annot-mini:hover { color: var(--c-text); border-color: var(--c-muted); }
+      .annot-mini--primary { background: var(--c-accent); color: #07080d; border-color: var(--c-accent); }
+      .annot-mini--primary:hover { background: var(--c-accent-2); border-color: var(--c-accent-2); color: #07080d; }
+
+      .annot-pop-comment { font-family: var(--font-prose); font-size: 14px; color: var(--c-text); line-height: 1.5; }
+      .annot-pop-sugg { font-family: var(--font-mono); font-size: 12px; color: var(--c-accent-2); background: var(--c-bg); border: 1px solid var(--c-line); border-radius: 2px; padding: 7px 8px; line-height: 1.45; }
+      .annot-pop-label { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--c-muted); margin-bottom: 4px; }
+
+      .annot-badge { display: inline-flex; align-items: center; gap: 7px; bottom: var(--s-6); left: var(--s-8); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; padding: 5px 11px; border-radius: 999px; background: var(--c-bg); border: 1px solid var(--c-line); color: var(--c-muted); opacity: 0.5; pointer-events: none; transition: opacity 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease); }
+      .annot-badge::before { content: ''; width: 5px; height: 5px; border-radius: 999px; background: currentColor; opacity: 0.7; }
+      .annot-badge[data-has='1'] { color: var(--c-accent); border-color: color-mix(in oklab, var(--c-accent) 45%, var(--c-line)); opacity: 1; }
       @media (max-width: 720px) { .annot-badge { display: none; } }
     `
     const styleEl = document.createElement('style')
@@ -149,7 +163,7 @@
         badge = elt('div', 'annot-ui annot-badge')
         document.body.appendChild(badge)
       }
-      badge.textContent = n ? `✎ ${n} note${n === 1 ? '' : 's'}` : '✎ edit mode'
+      badge.textContent = n ? `${n} note${n === 1 ? '' : 's'}` : 'edit mode'
       badge.dataset.has = n ? '1' : '0'
     }
 
@@ -189,7 +203,9 @@
       removeComposer()
       pendingRange = range.cloneRange()
       const rect = range.getBoundingClientRect()
-      floatBtn = elt('button', 'annot-ui annot-btn', '\u{1F4AC} Comment')
+      floatBtn = elt('button', 'annot-ui annot-btn')
+      floatBtn.innerHTML =
+        '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M3 3h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H7l-3 2.6V11H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/></svg><span>Comment</span>'
       floatBtn.style.top = rect.bottom + 8 + 'px'
       floatBtn.style.left = Math.max(8, rect.left) + 'px'
       floatBtn.addEventListener('mousedown', (e) => e.preventDefault())
@@ -201,22 +217,57 @@
       return r.toString().length > n ? r.toString().slice(0, n) + '…' : r.toString()
     }
 
+    // The text column the selection lives in — used to dock cards in the margin.
+    function colOf(range) {
+      let n = range && range.startContainer ? range.startContainer : null
+      n = n && n.nodeType === 3 ? n.parentElement : n
+      return (n && n.closest && n.closest('.prose, .body, article, main')) || main()
+    }
+
+    // Google-Docs-style: dock the card in the right margin (or left if no room),
+    // vertically aligned with the commented text. Falls back to below it.
+    function placeCard(card, anchorRect, colEl) {
+      const gap = 20
+      const w = card.offsetWidth || 320
+      const h = card.offsetHeight || 200
+      const col = (colEl || main()).getBoundingClientRect()
+      let left = col.right + gap
+      if (left + w > window.innerWidth - 8) {
+        left = col.left - gap - w
+        if (left < 8) left = Math.max(8, Math.min(window.innerWidth - w - 8, anchorRect.left))
+      }
+      const top = Math.max(8, Math.min(window.innerHeight - h - 8, anchorRect.top))
+      card.style.left = left + 'px'
+      card.style.top = top + 'px'
+    }
+
+    function autoGrow(ta) {
+      ta.style.height = 'auto'
+      ta.style.height = Math.min(ta.scrollHeight, 260) + 'px'
+    }
+
     function openComposer() {
       if (!pendingRange) return
       removeFloat()
       const r = pendingRange
       const rect = r.getBoundingClientRect()
+      const col = colOf(r)
       composer = elt('div', 'annot-ui annot-card')
-      composer.style.top = Math.min(window.innerHeight - 280, rect.bottom + 8) + 'px'
-      composer.style.left = Math.max(8, Math.min(window.innerWidth - 340, rect.left)) + 'px'
 
       const quote = elt('div', 'annot-quote', '“' + snippet(r, 140) + '”')
       const note = elt('textarea', 'annot-input')
       note.placeholder = 'Comment… (what should change?)'
-      note.rows = 2
+      note.rows = 3
       const sugg = elt('textarea', 'annot-input annot-input--sugg')
       sugg.placeholder = 'Suggested replacement (optional)'
       sugg.rows = 2
+      const reflow = () => {
+        autoGrow(note)
+        autoGrow(sugg)
+        placeCard(composer, rect, col)
+      }
+      note.addEventListener('input', reflow)
+      sugg.addEventListener('input', reflow)
       const row = elt('div', 'annot-row')
       const cancel = elt('button', 'annot-mini', 'Cancel')
       const save = elt('button', 'annot-mini annot-mini--primary', 'Save')
@@ -231,6 +282,9 @@
       row.append(cancel, save)
       composer.append(quote, note, sugg, row)
       document.body.appendChild(composer)
+      autoGrow(note)
+      autoGrow(sugg)
+      placeCard(composer, rect, col)
       note.focus()
     }
 
@@ -291,8 +345,6 @@
       if (!a) return
       const rect = mark.getBoundingClientRect()
       popover = elt('div', 'annot-ui annot-pop')
-      popover.style.top = Math.min(window.innerHeight - 200, rect.bottom + 8) + 'px'
-      popover.style.left = Math.max(8, Math.min(window.innerWidth - 320, rect.left)) + 'px'
 
       if (a.comment) popover.append(elt('div', 'annot-pop-comment', a.comment))
       if (a.suggestion) {
@@ -309,6 +361,7 @@
       row.append(del, done)
       popover.append(row)
       document.body.appendChild(popover)
+      placeCard(popover, rect, colOf({ startContainer: mark }))
     }
 
     async function removeAnnotation(a, mark, kind) {
