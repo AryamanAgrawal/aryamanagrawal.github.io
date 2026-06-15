@@ -1,12 +1,20 @@
-@import './tokens.css';
+@import "./tokens.css";
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-html { color-scheme: dark; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html {
+  color-scheme: dark;
+}
 
 body {
   font-family: var(--font-ui);
-  font-feature-settings: 'ss01', 'cv11';
+  font-feature-settings: "ss01", "cv11";
   background: var(--c-bg);
   color: var(--c-text);
   -webkit-font-smoothing: antialiased;
@@ -19,9 +27,14 @@ a {
   text-decoration: none;
   transition: color 200ms var(--ease);
 }
-a:hover { color: var(--c-accent); }
+a:hover {
+  color: var(--c-accent);
+}
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -29,12 +42,19 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 
-::selection { background: var(--c-accent); color: var(--c-bg); }
+::selection {
+  background: var(--c-accent);
+  color: var(--c-bg);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -42,8 +62,19 @@ p { margin: 0; }
 
 /* Smooth theme transitions on color-bearing properties only —
    not on layout/motion. Skip if reduced-motion. */
-html, body, a, .item-row, .item-title, .item-summary,
-.theme-toggle, .sec-name, .ident, .lede, .kicker, .meta, .now-body {
+html,
+body,
+a,
+.item-row,
+.item-title,
+.item-summary,
+.theme-toggle,
+.sec-name,
+.ident,
+.lede,
+.kicker,
+.meta,
+.now-body {
   transition:
     background-color 240ms var(--ease),
     color 240ms var(--ease),
@@ -60,16 +91,37 @@ html, body, a, .item-row, .item-title, .item-summary,
   display: grid;
   grid-template-columns:
     [gutter-start] 8rem
-    [body-start]   minmax(0, 44rem) [body-end];
+    [body-start] minmax(0, 44rem) [body-end];
   column-gap: 2rem;
   row-gap: var(--s-8);
   justify-content: center;
   padding: var(--s-24) var(--s-8);
 }
 
-.row { display: contents; }
-.row > .meta { grid-column: gutter-start / body-start; }
-.row > .body { grid-column: body-start / body-end; }
+/* Long-form posts: wider reading column. Text and media share the same width
+   so everything stays aligned. */
+.page--wide {
+  grid-template-columns:
+    [gutter-start] 8rem
+    [body-start] minmax(0, 48rem) [body-end];
+}
+.page--wide .prose,
+.page--wide .lede {
+  max-width: none;
+}
+.page--wide .prose > figure.ol-fig {
+  max-width: 720px;
+}
+
+.row {
+  display: contents;
+}
+.row > .meta {
+  grid-column: gutter-start / body-start;
+}
+.row > .body {
+  grid-column: body-start / body-end;
+}
 
 /* hr stretches across both columns as a visible spine break */
 .page > hr {
@@ -95,16 +147,28 @@ html, body, a, .item-row, .item-title, .item-summary,
   padding: 0;
 }
 
-.row > .meta, .row > .body { align-self: start; }
+.row > .meta,
+.row > .body {
+  align-self: start;
+}
 
 /* Item rows (essays, poems, etc.) and section headers use baseline alignment
    so the gutter mono sits on the same baseline as the body's first line of
    text, regardless of the body font's larger line-height. */
-.row.item > .meta, .row.item > .body,
-.row.sec-head > .meta, .row.sec-head > .body { align-self: baseline; }
+.row.item > .meta,
+.row.item > .body,
+.row.sec-head > .meta,
+.row.sec-head > .body {
+  align-self: baseline;
+}
 
-.body { min-width: 0; }
-.italic { font-family: var(--font-prose); font-style: italic; }
+.body {
+  min-width: 0;
+}
+.italic {
+  font-family: var(--font-prose);
+  font-style: italic;
+}
 
 /* row-split — body content with right-aligned tail (section headers, footers) */
 .row-split {
@@ -124,7 +188,9 @@ html, body, a, .item-row, .item-title, .item-summary,
   line-height: 1.4;
   margin: 0 0 var(--s-6);
 }
-.kicker a { color: var(--c-accent); }
+.kicker a {
+  color: var(--c-accent);
+}
 
 .sec-name {
   font-family: var(--font-display);
@@ -163,8 +229,12 @@ html, body, a, .item-row, .item-title, .item-summary,
   color: var(--c-text);
   transition: color 200ms var(--ease);
 }
-.item-title.italic { font-style: italic; }
-.item:hover .item-title { color: var(--c-accent); }
+.item-title.italic {
+  font-style: italic;
+}
+.item:hover .item-title {
+  color: var(--c-accent);
+}
 .item-summary {
   font-family: var(--font-prose);
   font-size: var(--t-14);
@@ -178,29 +248,98 @@ html, body, a, .item-row, .item-title, .item-summary,
 .prose {
   font-family: var(--font-prose);
   font-size: var(--t-20);
-  line-height: 1.7;
+  line-height: 1.74;
   color: var(--c-text);
   counter-reset: sidenote;
+  max-width: 40rem;
+  text-wrap: pretty;
 }
-.prose > * + * { margin-top: var(--s-6); }
-.prose h2 { font-family: var(--font-display); font-size: var(--t-31); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-top: var(--s-16); }
-.prose h3 { font-family: var(--font-display); font-size: var(--t-25); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; margin-top: var(--s-12); }
-.prose em { font-style: italic; color: var(--c-accent); }
-.prose strong { color: var(--c-text); font-weight: 600; }
-.prose a { color: var(--c-accent); border-bottom: 1px solid currentColor; padding-bottom: 1px; }
-.prose code { font-family: var(--font-mono); font-size: 0.9em; background: var(--c-surface); padding: 2px 6px; border-radius: 2px; }
-.prose pre { background: var(--c-surface); padding: var(--s-6); border-radius: 4px; overflow-x: auto; border: 1px solid var(--c-line); }
-.prose pre code { background: none; padding: 0; }
+.prose > * + * {
+  margin-top: var(--s-6);
+}
+.prose > figure,
+.prose > table,
+.prose > pre {
+  max-width: none;
+}
+/* A pullquote leads into the figure it introduces — tie them together. */
+.prose .pullquote + figure {
+  margin-top: var(--s-4);
+}
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--t-31);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: var(--s-16);
+}
+.prose h3 {
+  font-family: var(--font-display);
+  font-size: var(--t-25);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: var(--s-12);
+}
+.prose em {
+  font-style: italic;
+  color: var(--c-accent);
+}
+.prose strong {
+  color: var(--c-text);
+  font-weight: 600;
+}
+.prose a {
+  color: var(--c-accent);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--c-surface);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.prose pre {
+  background: var(--c-surface);
+  padding: var(--s-6);
+  border-radius: 4px;
+  overflow-x: auto;
+  border: 1px solid var(--c-line);
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
 .prose blockquote {
+  margin: var(--s-6) 0;
   border-left: 2px solid var(--c-accent);
   padding-left: var(--s-6);
   color: var(--c-muted);
   font-style: italic;
 }
-.prose ul, .prose ol { padding-left: 1.5em; }
-.prose li { margin-top: var(--s-3); }
-.prose hr { border: none; border-top: 1px solid var(--c-line); margin: var(--s-12) 0; }
-.prose img, .prose svg { max-width: 100%; height: auto; }
+.prose blockquote > :first-child {
+  margin-top: 0;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+}
+.prose li {
+  margin-top: var(--s-3);
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--c-line);
+  margin: var(--s-12) 0;
+}
+.prose img,
+.prose svg {
+  max-width: 100%;
+  height: auto;
+}
 
 /* Citations — rehype-citation emits <span class="citation"> around inline cites
    and appends a <div id="refs" class="references csl-bib-body"> block at the end. */
@@ -209,7 +348,9 @@ html, body, a, .item-row, .item-title, .item-summary,
   border-bottom: 1px dotted currentColor;
   padding-bottom: 0;
 }
-.prose .citation a:hover { border-bottom-style: solid; }
+.prose .citation a:hover {
+  border-bottom-style: solid;
+}
 
 .prose #refs {
   margin-top: var(--s-6);
@@ -224,7 +365,9 @@ html, body, a, .item-row, .item-title, .item-summary,
   text-indent: -1.5em;
   padding-left: 1.5em;
 }
-.prose #refs .csl-entry:last-child { border-bottom: none; }
+.prose #refs .csl-entry:last-child {
+  border-bottom: none;
+}
 .prose #refs .csl-entry a {
   color: var(--c-accent);
   border-bottom: none;
@@ -240,7 +383,9 @@ html, body, a, .item-row, .item-title, .item-summary,
   display: block;
   overflow-x: auto;
 }
-.prose thead { border-bottom: 1px solid var(--c-line); }
+.prose thead {
+  border-bottom: 1px solid var(--c-line);
+}
 .prose th {
   text-align: left;
   padding: var(--s-3) var(--s-4) var(--s-3) 0;
@@ -265,8 +410,12 @@ html, body, a, .item-row, .item-title, .item-summary,
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
-.footer-meta a { color: var(--c-muted); }
-.footer-meta a:hover { color: var(--c-accent); }
+.footer-meta a {
+  color: var(--c-muted);
+}
+.footer-meta a:hover {
+  color: var(--c-accent);
+}
 
 /* Mobile — collapse to single column, meta moves above its body sibling */
 @media (max-width: 720px) {
@@ -275,9 +424,19 @@ html, body, a, .item-row, .item-title, .item-summary,
     padding: var(--s-12) var(--s-6);
     row-gap: var(--s-6);
   }
-  .row > .meta, .row > .body { grid-column: 1; }
-  .meta { text-align: left; padding-top: 0; }
-  .row-split { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  .row > .meta,
+  .row > .body {
+    grid-column: 1;
+  }
+  .meta {
+    text-align: left;
+    padding-top: 0;
+  }
+  .row-split {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-2);
+  }
 }
 
 /* Shiki dual themes — swap by [data-theme] on <html>.

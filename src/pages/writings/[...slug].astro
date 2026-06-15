@@ -39,7 +39,7 @@ const fmt = writing.data.date.toLocaleDateString('en-US', { month: 'short', year
 <Base title={writing.data.title} description={writing.data.summary} type="article" publishedTime={writing.data.date} jsonLd={jsonLd} ogSlug={`writings/${writing.id}`}>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" />
 
-  <main class="page">
+  <main class="page page--wide">
 
     <div class="row">
       <div class="meta">{fmt}</div>

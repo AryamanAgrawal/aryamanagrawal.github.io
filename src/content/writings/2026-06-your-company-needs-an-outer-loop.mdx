@@ -1,0 +1,45 @@
+---
+title: Your company needs an outer loop
+date: 2026-06-14
+summary: Everyone is racing to put agents in loops. A loop is only as good as the information it grounds itself in, and most companies have let that information fall behind a horizon they can't reach.
+tags: [ai, agents, memory, knowledge]
+draft: false
+---
+
+import OuterLoopDiagram from "@/components/OuterLoopDiagram.astro";
+import Sidenote from "@/components/Sidenote.astro";
+import Pullquote from "@/components/Pullquote.astro";
+
+> Context is the memory layer for a company. Dump everything into one big space, make it vector searchable, and that solves the problem.
+
+Some version of that pitch reaches me from almost everyone building in this space right now. I think it has the problem backwards.
+
+We have always treated docs as archival instruments. You write something down once, and people read it forever. When it goes stale, the only fix anyone reaches for is a mandate: a process, a quarterly review, a person whose job is to keep the wiki honest. Humans are bad at this. They skip it, the docs rot, and the whole org pays for it without ever quite seeing the bill.<Sidenote>Jack Dorsey and Roelof Botha, [From Hierarchy to Intelligence](https://block.xyz/inside/from-hierarchy-to-intelligence) — the case that this is a vastly underrated lever.</Sidenote>
+
+It helps to look at what actually happens to a decision. Say one gets made in a meeting. The usual path is that it lands as a bullet in someone's notes, then a human has to remember to log it in Linear or Jira, then another has to turn it into real work. That is the engineer's version, and every other function has its own leaky chain. Each handoff is a place the thread can drop. And most decisions never even make it that far. They happen in a Slack thread, a DM, or someone's head, and that is where they stay.
+
+So the information is not gone, exactly. It happened. Someone knows. But it is sitting behind a horizon you can't reach. When you search, you don't get the decision back, you get the two hundred messages around it. I know companies at the absolute frontier of this field who find out the name of their next model by searching Slack. The answer is in there. Good luck pulling it out clean.
+
+This is the part people underrate. Slack, Notion, the search layers stacked on top, all of them optimize for retrieval out of a pile that nobody grooms. The pile only grows. Nothing ever reconciles it.
+
+Here is where it meets something people are excited about for a completely different reason. The buzz right now is agents in loops: drop a capable model into a loop with good feedback and it climbs. Run, check, adjust, run again. Lance Martin wrote about this recently.<Sidenote>Lance Martin, [Designing loops with Fable 5](https://x.com/RLanceMartin/status/2064397389189071163). The inner-loop framing is his.</Sidenote> The catch he names is that the checking cannot come from the same context that did the work, because a model grading itself inherits its own blind spots. You need a verifier the author can't reach. We ran into the same wall building doc updates at Falconer. Instead of asking a model to score whether a document is stale, we have it argue the case in front of a jury that never sees the author's reasoning. The judgment has to happen outside the thing being judged.
+
+But a loop is only ever as good as what it grounds itself in. This is the part I can't stop turning over. Put an agent in a loop on top of stale information and it does not self-correct, it self-reinforces, faster and more confidently than any human would. The mistake compounds at machine speed.
+
+I watch the human version of this constantly. A new hire reads a doc and has no reason to doubt it, so they take it and run. Their work inherits the error, and it spreads quietly and unmeasured until some senior person who actually knows the code happens to catch it, assuming the topic ever comes up at all. That senior catch was the only safety net we ever had, and it was always thin. An agent is the new hire who never doubts, running a thousand times over. And with engineers token-maxxing, not even reading the commits that land in main, the last human check is on its way out too. We are going to see more mistakes, more jank, and more quiet vulnerabilities riding that loop straight into production.
+
+So org memory is not a side quest to the agent-loop excitement. It is the floor the whole thing stands on.
+
+<Pullquote>
+  Everyone is building inner loops on an outer loop that is already broken.
+</Pullquote>
+
+<OuterLoopDiagram variant="minimal" />
+
+The outer loop only works if contradictions and supersessions get caught and resolved, and getting that to a hundred percent is genuinely hard. It is the problem we are chipping at. The base cases are concrete enough to picture: pull decisions straight out of Slack, where they actually get made, and deliver the answers back there too. Update a doc the moment a PR lands. Give the system access across Slack, GitHub, Linear, and meeting notes, and let it reconcile the sources and hand you the contradictions itself. The specific workflows vary wildly between orgs, but they collapse into a handful of shapes.
+
+What I would warn against is treating the loop as the whole prize. The black hole is real, and it pulls on every org with serious force. You can spend effort to settle into an orbit and circle it, which at least keeps you from falling in, but it is a holding pattern. The real value is the Interstellar move: getting behind the horizon, decoding it, and sending something usable back out through the gravity. That is the moment you stop being dragged around by your own accumulated information and start steering it. I am an optimist about this. We chip away, little by little, until we are the ones flying the trajectory instead of falling into it.
+
+---
+
+_I work on this at [Falconer](https://falconer.com), where we are building a shared memory layer for teams and their agents._

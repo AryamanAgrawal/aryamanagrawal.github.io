@@ -1,0 +1,39 @@
+---
+/**
+ * Editorial pullquote — large display-face emphasis for a single strong line.
+ * Distinct from `blockquote` (muted, italic, for quoting sources); this is for
+ * elevating a line of the author's own argument. Resolves design tokens, so it
+ * follows the [data-theme] toggle.
+ *
+ * Usage in MDX:
+ *   <Pullquote>Everyone is building inner loops on an outer loop that is already broken.</Pullquote>
+ */
+---
+
+<aside class="pullquote">
+  <p><slot /></p>
+</aside>
+
+<style>
+  .pullquote {
+    margin: var(--s-12) 0 var(--s-8);
+    max-width: 34rem;
+  }
+  .pullquote::before {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    border-top: 2px solid var(--c-accent);
+    margin-bottom: var(--s-3);
+  }
+  .pullquote p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--t-31);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--c-text);
+    text-wrap: balance;
+  }
+</style>

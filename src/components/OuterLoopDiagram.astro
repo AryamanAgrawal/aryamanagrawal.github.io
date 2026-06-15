@@ -1,0 +1,419 @@
+---
+// Two nested loops orbiting a horizon. `variant` switches the horizon treatment
+// so different looks can be compared. Colors inherit the site design tokens, so
+// the figure follows the [data-theme] toggle automatically.
+interface Props {
+  variant?: 'current' | 'lensing' | 'grain' | 'minimal' | 'dramatic' | 'layered' | 'minimal-grain';
+}
+const { variant = 'current' } = Astro.props;
+const layered = variant === 'layered';
+const minimalLayout = variant === 'minimal' || variant === 'minimal-grain';
+const showHtmlDisk = variant === 'current' || variant === 'grain' || variant === 'dramatic' || layered;
+const showLensing = variant === 'lensing' || variant === 'dramatic';
+const showGrain = variant === 'grain' || variant === 'dramatic' || variant === 'minimal-grain';
+const showParticles = true;
+---
+
+<figure
+  class:list={['ol-fig', `ol-v-${variant}`]}
+  role="img"
+  aria-label="Two nested loops orbiting a horizon: a fast inner agent loop of run, check, adjust, tethered to and grounded in a slow outer loop of the company's memory that cycles through consult, fail, investigate, verify, distill, around a central horizon where unreconciled information is lost."
+>
+  {layered && <div class="ol-accretion ol-accretion--outer" aria-hidden="true"></div>}
+  {showHtmlDisk && <div class="ol-accretion" aria-hidden="true"></div>}
+  {layered && <div class="ol-accretion ol-accretion--inner" aria-hidden="true"></div>}
+  <svg viewBox="0 -40 760 552" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="ol-core" cx="50%" cy="42%" r="70%">
+        <stop offset="0%" stop-color="#11151f"></stop>
+        <stop offset="62%" stop-color="#070810"></stop>
+        <stop offset="100%" stop-color="#04050a"></stop>
+      </radialGradient>
+      <path id="ol-outerPath" d="M380,80 A170,170 0 1,1 379.9,80"></path>
+      <path id="ol-innerPath" d="M628,56 A40,40 0 1,1 627.9,56"></path>
+      <linearGradient id="ol-doppler" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" class="ol-dopStop ol-dopStop--hot"></stop>
+        <stop offset="0.45" class="ol-dopStop ol-dopStop--mid"></stop>
+        <stop offset="1" class="ol-dopStop ol-dopStop--cold"></stop>
+      </linearGradient>
+      <filter id="ol-soft" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="3.2"></feGaussianBlur>
+      </filter>
+      <filter id="ol-grain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="n"></feTurbulence>
+        <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0"></feColorMatrix>
+      </filter>
+      <clipPath id="ol-coreClip"><circle cx="380" cy="250" r="92"></circle></clipPath>
+    </defs>
+
+    <circle cx="380" cy="250" r="122" class="ol-guide"></circle>
+    <circle cx="380" cy="250" r="78" class="ol-guide"></circle>
+    {layered && <circle cx="380" cy="250" r="142" class="ol-guide"></circle>}
+    {layered && <circle cx="380" cy="250" r="102" class="ol-guide"></circle>}
+
+    <circle cx="380" cy="250" r="96" class="ol-glow"></circle>
+
+    {minimalLayout && <circle cx="380" cy="250" r="66" class="ol-minRing"></circle>}
+
+    {
+      showLensing && (
+        <path d="M284,250 A96,68 0 0 1 476,250" class="ol-lensArc"></path>
+      )
+    }
+
+    <circle cx="380" cy="250" r="50" fill="url(#ol-core)"></circle>
+    <circle cx="380" cy="250" r="51" class="ol-rim"></circle>
+    <circle cx="380" cy="250" r="50" class="ol-rim ol-rim--soft"></circle>
+
+    {
+      showLensing && (
+        <ellipse cx="380" cy="250" rx="98" ry="15" class="ol-frontDisk"></ellipse>
+      )
+    }
+
+    {
+      showGrain && (
+        <rect x="280" y="150" width="200" height="200" class="ol-grain" clip-path="url(#ol-coreClip)" filter="url(#ol-grain)"></rect>
+      )
+    }
+
+    {
+      showParticles && (
+        <>
+          <circle r="2.4" class="ol-infall">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M380,150 Q 472,206 396,230"></animateMotion>
+            <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0.9;0.9;0" keyTimes="0;0.2;0.75;1"></animate>
+          </circle>
+          <circle r="2" class="ol-infall">
+            <animateMotion dur="7.5s" repeatCount="indefinite" begin="-2s" path="M250,300 Q 312,214 358,262"></animateMotion>
+            <animate attributeName="opacity" dur="7.5s" repeatCount="indefinite" begin="-2s" values="0;0.85;0.85;0" keyTimes="0;0.2;0.75;1"></animate>
+          </circle>
+          <circle r="2.2" class="ol-infall">
+            <animateMotion dur="6.8s" repeatCount="indefinite" begin="-4s" path="M520,322 Q 430,300 406,272"></animateMotion>
+            <animate attributeName="opacity" dur="6.8s" repeatCount="indefinite" begin="-4s" values="0;0.85;0.85;0" keyTimes="0;0.2;0.75;1"></animate>
+          </circle>
+        </>
+      )
+    }
+
+    <ellipse cx="380" cy="252" rx="70" ry="24" class="ol-coreScrim"></ellipse>
+    <text x="380" y="248" text-anchor="middle" class="ol-coreLabel">the horizon</text>
+    <text x="380" y="265" text-anchor="middle" class="ol-coreSub">information falls in</text>
+
+    <circle cx="380" cy="250" r="170" class="ol-ring"></circle>
+    <circle r="4.5" class="ol-pulse">
+      <animateMotion dur="20s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#ol-outerPath"></mpath>
+      </animateMotion>
+    </circle>
+
+    <circle cx="380" cy="80" r="5" class="ol-node"></circle>
+    <text x="380" y="64" text-anchor="middle" class="ol-label ol-label--key">consult</text>
+    <circle cx="542" cy="198" r="5" class="ol-node"></circle>
+    <text x="558" y="196" text-anchor="start" class="ol-label">fail</text>
+    <circle cx="480" cy="388" r="5" class="ol-node"></circle>
+    <text x="492" y="406" text-anchor="start" class="ol-label">investigate</text>
+    <circle cx="280" cy="388" r="5" class="ol-node"></circle>
+    <text x="268" y="406" text-anchor="end" class="ol-label">verify</text>
+    <circle cx="218" cy="198" r="5" class="ol-node"></circle>
+    <text x="202" y="196" text-anchor="end" class="ol-label">distill</text>
+
+    <line x1="600" y1="128" x2="548" y2="190" class="ol-tether"></line>
+    <text x="612" y="150" text-anchor="start" class="ol-tetherLabel">grounds in</text>
+
+    <circle cx="628" cy="96" r="40" class="ol-ring ol-ring--inner"></circle>
+    <circle r="3.5" class="ol-pulse ol-pulse--inner">
+      <animateMotion dur="4.5s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#ol-innerPath"></mpath>
+      </animateMotion>
+    </circle>
+    <circle cx="628" cy="56" r="4" class="ol-node ol-node--inner"></circle>
+    <text x="628" y="44" text-anchor="middle" class="ol-label ol-label--inner">run</text>
+    <circle cx="662.6" cy="116" r="4" class="ol-node ol-node--inner"></circle>
+    <text x="676" y="120" text-anchor="start" class="ol-label ol-label--inner">check</text>
+    <circle cx="593.4" cy="116" r="4" class="ol-node ol-node--inner"></circle>
+    <text x="580" y="120" text-anchor="end" class="ol-label ol-label--inner">adjust</text>
+
+    <text x="628" y="-14" text-anchor="middle" class="ol-title">Inner loop</text>
+    <text x="628" y="2" text-anchor="middle" class="ol-sub">one agent, one session</text>
+
+    <text x="380" y="470" text-anchor="middle" class="ol-title">Outer loop</text>
+    <text x="380" y="488" text-anchor="middle" class="ol-sub">the company's memory</text>
+  </svg>
+</figure>
+
+<style>
+  .ol-fig {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: var(--s-16) auto;
+  }
+  .ol-fig svg {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    display: block;
+  }
+  .ol-accretion {
+    position: absolute;
+    left: 50%;
+    top: 52.5%;
+    width: 23%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      color-mix(in oklab, var(--c-accent) 38%, transparent) 0deg,
+      var(--c-accent) 60deg,
+      var(--c-accent-2) 104deg,
+      #d9f3fb 140deg,
+      var(--c-accent-2) 184deg,
+      var(--c-accent) 240deg,
+      color-mix(in oklab, var(--c-accent) 38%, transparent) 320deg,
+      color-mix(in oklab, var(--c-accent) 38%, transparent) 360deg
+    );
+    -webkit-mask: radial-gradient(closest-side, transparent 50%, #000 60%, #000 92%, transparent 100%);
+    mask: radial-gradient(closest-side, transparent 50%, #000 60%, #000 92%, transparent 100%);
+    filter: blur(6px);
+    opacity: 0.8;
+    animation: ol-accretion-breathe 7s var(--ease) infinite;
+  }
+  .ol-guide {
+    fill: none;
+    stroke: var(--c-line);
+    stroke-width: 1;
+    opacity: 0.35;
+  }
+  .ol-glow {
+    fill: var(--c-accent);
+    opacity: 0.1;
+    animation: ol-breathe 6s var(--ease) infinite;
+    transform-origin: 380px 250px;
+  }
+  .ol-minRing {
+    fill: none;
+    stroke: var(--c-accent);
+    stroke-width: 1;
+    opacity: 0.4;
+  }
+  .ol-lensArc {
+    fill: none;
+    stroke: url(#ol-doppler);
+    stroke-width: 6;
+    filter: url(#ol-soft);
+    opacity: 0.9;
+  }
+  .ol-frontDisk {
+    fill: url(#ol-doppler);
+    filter: url(#ol-soft);
+    opacity: 0.85;
+  }
+  .ol-grain {
+    mix-blend-mode: soft-light;
+    opacity: 0.5;
+  }
+  .ol-dopStop--hot {
+    stop-color: #e6f7fc;
+  }
+  .ol-dopStop--mid {
+    stop-color: var(--c-accent-2);
+  }
+  .ol-dopStop--cold {
+    stop-color: var(--c-accent);
+    stop-opacity: 0;
+  }
+  .ol-rim {
+    fill: none;
+    stroke: var(--c-accent-2);
+    stroke-width: 1.5;
+    opacity: 0.85;
+  }
+  .ol-rim--soft {
+    stroke: var(--c-accent);
+    stroke-width: 4;
+    opacity: 0.4;
+    filter: url(#ol-soft);
+  }
+  .ol-infall {
+    fill: var(--c-accent-2);
+  }
+  .ol-coreScrim {
+    fill: #04050a;
+    opacity: 0.78;
+    filter: url(#ol-soft);
+  }
+  .ol-ring {
+    fill: none;
+    stroke: var(--c-line);
+    stroke-width: 1.4;
+    stroke-dasharray: 2 8;
+    animation: ol-flow 36s linear infinite;
+  }
+  .ol-ring--inner {
+    stroke: var(--c-accent);
+    stroke-opacity: 0.75;
+    stroke-dasharray: 2 6;
+    animation-duration: 11s;
+    animation-direction: reverse;
+  }
+  .ol-node {
+    fill: var(--c-bg);
+    stroke: var(--c-muted);
+    stroke-width: 1.3;
+  }
+  .ol-node--inner {
+    stroke: var(--c-accent);
+  }
+  .ol-pulse {
+    fill: var(--c-accent-2);
+  }
+  .ol-pulse--inner {
+    fill: var(--c-accent);
+  }
+  .ol-tether {
+    stroke: var(--c-accent);
+    stroke-width: 1.2;
+    stroke-dasharray: 3 4;
+    opacity: 0.6;
+  }
+  .ol-label {
+    fill: var(--c-text);
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+  }
+  .ol-label--key {
+    fill: var(--c-text);
+  }
+  .ol-label--inner {
+    fill: var(--c-accent-2);
+    font-size: 13px;
+  }
+  .ol-tetherLabel {
+    fill: var(--c-accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .ol-coreLabel {
+    fill: #f8f4ea;
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: 0.015em;
+  }
+  .ol-coreSub {
+    fill: #cdd4e0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .ol-title {
+    fill: var(--c-text);
+    font-family: var(--font-ui);
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .ol-sub {
+    fill: var(--c-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .ol-accretion--outer {
+    width: 48%;
+    opacity: 0.28;
+    filter: blur(10px);
+    animation-duration: 11s;
+    animation-delay: -3s;
+    -webkit-mask: radial-gradient(closest-side, transparent 71%, #000 79%, #000 88%, transparent 96%);
+    mask: radial-gradient(closest-side, transparent 71%, #000 79%, #000 88%, transparent 96%);
+  }
+  .ol-accretion--inner {
+    width: 23%;
+    opacity: 0.78;
+    filter: blur(2.5px);
+    animation-duration: 5.5s;
+    animation-delay: -1.5s;
+    background: conic-gradient(
+      from 40deg,
+      color-mix(in oklab, var(--c-accent-2) 45%, transparent) 0deg,
+      var(--c-accent-2) 70deg,
+      #eafaff 132deg,
+      var(--c-accent-2) 200deg,
+      color-mix(in oklab, var(--c-accent-2) 45%, transparent) 300deg,
+      color-mix(in oklab, var(--c-accent-2) 45%, transparent) 360deg
+    );
+    -webkit-mask: radial-gradient(closest-side, transparent 56%, #000 64%, #000 82%, transparent 92%);
+    mask: radial-gradient(closest-side, transparent 56%, #000 64%, #000 82%, transparent 92%);
+  }
+
+  /* Variant tuning */
+  .ol-v-layered .ol-glow {
+    opacity: 0.12;
+  }
+  .ol-v-layered .ol-accretion:not(.ol-accretion--outer):not(.ol-accretion--inner) {
+    width: 35%;
+    opacity: 0.7;
+    filter: blur(5px);
+    -webkit-mask: radial-gradient(closest-side, transparent 64%, #000 72%, #000 84%, transparent 94%);
+    mask: radial-gradient(closest-side, transparent 64%, #000 72%, #000 84%, transparent 94%);
+  }
+  .ol-v-minimal .ol-glow,
+  .ol-v-minimal-grain .ol-glow {
+    opacity: 0.05;
+  }
+  .ol-v-minimal-grain .ol-grain {
+    opacity: 0.6;
+  }
+  .ol-v-dramatic .ol-accretion {
+    width: 40%;
+    opacity: 0.92;
+    filter: blur(8px);
+  }
+  .ol-v-dramatic .ol-glow {
+    opacity: 0.16;
+  }
+  .ol-v-lensing .ol-glow {
+    opacity: 0.08;
+  }
+
+  @keyframes ol-flow {
+    to {
+      stroke-dashoffset: -200;
+    }
+  }
+  @keyframes ol-breathe {
+    0%,
+    100% {
+      opacity: 0.07;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
+  @keyframes ol-accretion-breathe {
+    0%,
+    100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 0.85;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ol-ring,
+    .ol-glow,
+    .ol-accretion {
+      animation: none;
+    }
+    .ol-pulse,
+    .ol-pulse--inner,
+    .ol-infall {
+      display: none;
+    }
+  }
+</style>
