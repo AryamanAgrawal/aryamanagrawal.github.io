@@ -4,9 +4,11 @@
 // the figure follows the [data-theme] toggle automatically.
 interface Props {
   variant?: 'current' | 'lensing' | 'grain' | 'minimal' | 'dramatic' | 'layered' | 'minimal-grain';
-  layout?: 'outside' | 'zoom';
+  layout?: 'outside' | 'zoom' | 'broken';
 }
 const { variant = 'current', layout = 'outside' } = Astro.props;
+const ringBroken = layout === 'broken';
+const showZoomInset = layout === 'zoom' || layout === 'broken';
 const layered = variant === 'layered';
 const minimalLayout = variant === 'minimal' || variant === 'minimal-grain';
 const showHtmlDisk = variant === 'current' || variant === 'grain' || variant === 'dramatic' || layered;
@@ -31,6 +33,7 @@ const showParticles = true;
         <stop offset="100%" stop-color="#04050a"></stop>
       </radialGradient>
       <path id="ol-outerPath" d="M380,80 A170,170 0 1,1 379.9,80"></path>
+      <path id="ol-outerPathBroken" d="M327.5,411.7 A170,170 0 1 1 432.5,411.7"></path>
       <path id="ol-innerPath" d="M628,56 A40,40 0 1,1 627.9,56"></path>
       <linearGradient id="ol-doppler" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0" class="ol-dopStop ol-dopStop--hot"></stop>
@@ -104,12 +107,25 @@ const showParticles = true;
     <text x="380" y="248" text-anchor="middle" class="ol-coreLabel">the horizon</text>
     <text x="380" y="265" text-anchor="middle" class="ol-coreSub">information falls in</text>
 
-    <circle cx="380" cy="250" r="170" class="ol-ring"></circle>
+    {ringBroken ? (
+      <path d="M327.5,411.7 A170,170 0 1 1 432.5,411.7" class="ol-ring" />
+    ) : (
+      <circle cx="380" cy="250" r="170" class="ol-ring" />
+    )}
     <circle r="4.5" class="ol-pulse">
       <animateMotion dur="20s" repeatCount="indefinite" rotate="auto">
-        <mpath href="#ol-outerPath"></mpath>
+        <mpath href={ringBroken ? '#ol-outerPathBroken' : '#ol-outerPath'} />
       </animateMotion>
     </circle>
+    {
+      ringBroken && (
+        <>
+          <line x1="321" y1="404" x2="334" y2="419" class="ol-broken" />
+          <line x1="439" y1="404" x2="426" y2="419" class="ol-broken" />
+          <text x="380" y="438" text-anchor="middle" class="ol-broken-label">broken</text>
+        </>
+      )
+    }
 
     <circle cx="380" cy="80" r="5" class="ol-node"></circle>
     <text x="380" y="64" text-anchor="middle" class="ol-label ol-label--key">consult</text>
@@ -144,7 +160,7 @@ const showParticles = true;
     }
 
     {
-      layout === 'zoom' && (
+      showZoomInset && (
         <>
           <circle cx="542" cy="198" r="9" class="ol-zoom-src" />
           <line x1="548.9" y1="203.8" x2="658.6" y2="121.8" class="ol-zoom-line" />
@@ -318,6 +334,17 @@ const showParticles = true;
     stroke: var(--c-accent);
     stroke-width: 1;
     opacity: 0.4;
+  }
+  .ol-broken {
+    stroke: var(--c-film-meta, #d97706);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+  .ol-broken-label {
+    fill: var(--c-film-meta, #d97706);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
   }
   .ol-label {
     fill: var(--c-text);
