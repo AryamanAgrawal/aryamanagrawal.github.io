@@ -24,5 +24,8 @@
     "rehype-mermaid": "^3.0.0",
     "remark-breaks": "^4.0.0",
     "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
   }
 }
