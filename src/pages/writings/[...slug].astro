@@ -36,7 +36,7 @@ const jsonLd = {
 
 const fmt = writing.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 ---
-<Base title={writing.data.title} description={writing.data.summary} type="article" publishedTime={writing.data.date} jsonLd={jsonLd} ogSlug={`writings/${writing.id}`}>
+<Base title={writing.data.title} description={writing.data.summary} type="article" publishedTime={writing.data.date} jsonLd={jsonLd} ogSlug={`writings/${writing.id}`} ogImage={writing.data.ogImage} ogImageWidth={writing.data.ogImageWidth} ogImageHeight={writing.data.ogImageHeight}>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" />
 
   <main class="page page--wide">

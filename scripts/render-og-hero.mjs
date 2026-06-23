@@ -116,7 +116,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 </svg>`;
 
 const resvg = new Resvg(svg, {
-  fitTo: { mode: "width", value: W },
+  fitTo: { mode: "width", value: W * 2 },
   background: BG,
   font: {
     loadSystemFonts: false,

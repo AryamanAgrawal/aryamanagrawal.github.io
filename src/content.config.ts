@@ -1,19 +1,22 @@
-import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
 
 const writings = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/writings' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/writings" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
     summary: z.string(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    ogImage: z.string().optional(),
+    ogImageWidth: z.number().optional(),
+    ogImageHeight: z.number().optional(),
   }),
 });
 
 const poems = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/poems' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/poems" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
@@ -22,7 +25,7 @@ const poems = defineCollection({
 });
 
 const photos = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/photos' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/photos" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
@@ -35,18 +38,20 @@ const photos = defineCollection({
 });
 
 const sketches = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/sketches' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/sketches" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
     notebook: z.string(),
     page: z.number(),
-    orientation: z.enum(['portrait', 'landscape']).default('portrait'),
+    orientation: z.enum(["portrait", "landscape"]).default("portrait"),
     image: z.string(),
-    marginalia: z.object({
-      topRight: z.string().optional(),
-      bottomCaption: z.string().optional(),
-    }).optional(),
+    marginalia: z
+      .object({
+        topRight: z.string().optional(),
+        bottomCaption: z.string().optional(),
+      })
+      .optional(),
     draft: z.boolean().default(false),
   }),
 });

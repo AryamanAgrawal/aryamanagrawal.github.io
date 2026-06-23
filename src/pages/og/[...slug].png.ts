@@ -47,36 +47,7 @@ const route = await OGImageRoute({
   // Filename already provides .png — don't double-extend
   getSlug: (path) => path,
 
-  getImageOptions: (path, page: PageMeta) => {
-    if (path === "writings/2026-06-your-company-needs-an-outer-loop") {
-      return {
-        title: " ",
-        description: " ",
-        bgImage: {
-          path: "./public/og-assets/outer-loop-hero.png",
-          fit: "cover",
-        },
-        bgGradient: [[12, 13, 16]],
-        border: { width: 0, color: [12, 13, 16] },
-        padding: 0,
-        font: {
-          title: {
-            families: ["Inter Tight"],
-            weight: "Bold",
-            size: 1,
-            color: [12, 13, 16],
-          },
-          description: {
-            families: ["JetBrains Mono"],
-            weight: "Medium",
-            size: 1,
-            color: [12, 13, 16],
-          },
-        },
-        fonts: FONTS,
-      };
-    }
-
+  getImageOptions: (_path, page: PageMeta) => {
     if (page.type === "home") {
       return {
         title:
